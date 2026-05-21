@@ -584,7 +584,57 @@ Project Alpha sigue la estructura de la **Pirámide de Testing** para garantizar
 
 ---
 
-## 13. Checklist de PR
+## 13. Flujo de Git
+
+### 13.1 Ramas
+
+| Rama | Propósito |
+|---|---|
+| `main` | Rama protegida. Solo recibe cambios vía Pull Request. Nunca se pushea directamente. |
+| `feat/{descripcion}` | Nueva funcionalidad |
+| `fix/{descripcion}` | Corrección de bug |
+| `chore/{descripcion}` | Mantenimiento, dependencias, config |
+| `docs/{descripcion}` | Solo documentación |
+
+### 13.2 Flujo de trabajo
+
+```
+# 1. Partir siempre de main actualizado
+git checkout main && git pull
+
+# 2. Crear rama de feature
+git checkout -b feat/nombre-descriptivo
+
+# 3. Desarrollar y commitear
+git add <archivos>
+git commit -m "feat: descripción del cambio"
+
+# 4. Pushear la rama y abrir PR hacia main
+git push origin feat/nombre-descriptivo
+# → Abrir PR en GitHub: feat/nombre-descriptivo → main
+```
+
+### 13.3 Protecciones
+
+- **Hook local (`pre-push`):** Bloquea pushes directos a `main`. Se instala automáticamente con `npm install`.
+- **Branch protection en GitHub:** `main` debe tener habilitado "Require a pull request before merging" en Settings → Branches.
+
+### 13.4 Convención de commits
+
+Seguir [Conventional Commits](https://www.conventionalcommits.org/):
+
+| Prefijo | Cuándo usarlo |
+|---|---|
+| `feat:` | Nueva funcionalidad |
+| `fix:` | Corrección de bug |
+| `chore:` | Mantenimiento sin impacto en lógica |
+| `docs:` | Solo documentación |
+| `refactor:` | Refactor sin cambio de comportamiento |
+| `test:` | Agregar o corregir tests |
+
+---
+
+## 14. Checklist de PR
 
 Antes de aprobar cualquier Pull Request, verificar:
 

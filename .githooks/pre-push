@@ -1,0 +1,18 @@
+#!/bin/sh
+# Impide pushes directos a main. Todo cambio debe ir por PR desde una rama de feature.
+
+protected_branch="main"
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [ "$current_branch" = "$protected_branch" ]; then
+  echo ""
+  echo "  🚫 Push directo a '$protected_branch' no permitido."
+  echo ""
+  echo "  Usa una rama de feature:"
+  echo "    git checkout -b feat/mi-cambio"
+  echo "    git push origin feat/mi-cambio"
+  echo ""
+  exit 1
+fi
+
+exit 0
