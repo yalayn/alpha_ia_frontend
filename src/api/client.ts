@@ -23,5 +23,5 @@ axiosInstance.interceptors.response.use(
 );
 
 export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
-  return axiosInstance.request<unknown, T>(config);
+  return axiosInstance.request<T>(config).then((response) => response.data);
 };
