@@ -1,16 +1,21 @@
 import axios from 'axios';
 import type { AxiosRequestConfig } from 'axios';
 import { env } from '@/core/config/env';
+import { getStoredToken } from '@/core/auth/auth.context';
 
 export const axiosInstance = axios.create({
   baseURL: env.apiUrl,
 });
 
-// El backend gestiona la sesión via HttpOnly Cookie.
-// withCredentials adjunta la cookie automáticamente en llamadas cross-origin.
-axiosInstance.defaults.withCredentials = true;
-
-axiosInstance.interceptors.request.use((config) => config);
+// Adjunta el JWT almacenado en localStorage en cada request autenticado.
+axiosInstance.interceptors.request.use((config) => {
+  const token = getStoredToken();
+  if (token) {
+    config.headers = config.headers ?? {};
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
 
 axiosInstance.interceptors.response.use(
   (response) => response,

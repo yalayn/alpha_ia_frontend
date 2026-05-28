@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { useAuth } from '@/core/auth/use-auth';
+import { AppLayout } from '@/core/layout/AppLayout';
 
 const AuthLoginPage = lazy(() =>
   import('@/features/auth').then((m) => ({ default: m.AuthLoginPage })),
@@ -44,6 +45,7 @@ function SuspenseWrapper({ children }: { children: React.ReactNode }) {
 }
 
 export const router = createBrowserRouter([
+  // Rutas públicas (sin layout)
   {
     path: '/login',
     element: <SuspenseWrapper><AuthLoginPage /></SuspenseWrapper>,
@@ -52,56 +54,46 @@ export const router = createBrowserRouter([
     path: '/register',
     element: <SuspenseWrapper><AuthRegisterPage /></SuspenseWrapper>,
   },
+
+  // Rutas protegidas (con AppLayout)
   {
-    path: '/dashboard',
     element: (
       <RequireAuth>
-        <SuspenseWrapper><DashboardPage /></SuspenseWrapper>
+        <AppLayout />
       </RequireAuth>
     ),
+    children: [
+      {
+        path: '/dashboard',
+        element: <SuspenseWrapper><DashboardPage /></SuspenseWrapper>,
+      },
+      {
+        path: '/plans',
+        element: <SuspenseWrapper><PlansPage /></SuspenseWrapper>,
+      },
+      {
+        path: '/plans/new',
+        element: (
+          <RequireAdmin>
+            <SuspenseWrapper><PlanCreatePage /></SuspenseWrapper>
+          </RequireAdmin>
+        ),
+      },
+      {
+        path: '/plans/:planId',
+        element: <SuspenseWrapper><PlanDetailPage /></SuspenseWrapper>,
+      },
+      {
+        path: '/subscriptions/:subscriptionId',
+        element: <SuspenseWrapper><SubscriptionDetailPage /></SuspenseWrapper>,
+      },
+      {
+        path: '/access',
+        element: <SuspenseWrapper><AccessControlPage /></SuspenseWrapper>,
+      },
+    ],
   },
-  {
-    path: '/plans',
-    element: (
-      <RequireAuth>
-        <SuspenseWrapper><PlansPage /></SuspenseWrapper>
-      </RequireAuth>
-    ),
-  },
-  {
-    path: '/plans/new',
-    element: (
-      <RequireAuth>
-        <RequireAdmin>
-          <SuspenseWrapper><PlanCreatePage /></SuspenseWrapper>
-        </RequireAdmin>
-      </RequireAuth>
-    ),
-  },
-  {
-    path: '/plans/:planId',
-    element: (
-      <RequireAuth>
-        <SuspenseWrapper><PlanDetailPage /></SuspenseWrapper>
-      </RequireAuth>
-    ),
-  },
-  {
-    path: '/subscriptions/:subscriptionId',
-    element: (
-      <RequireAuth>
-        <SuspenseWrapper><SubscriptionDetailPage /></SuspenseWrapper>
-      </RequireAuth>
-    ),
-  },
-  {
-    path: '/access',
-    element: (
-      <RequireAuth>
-        <SuspenseWrapper><AccessControlPage /></SuspenseWrapper>
-      </RequireAuth>
-    ),
-  },
+
   {
     path: '/',
     element: <Navigate to="/dashboard" replace />,

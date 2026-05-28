@@ -9,8 +9,7 @@ export function useLoginForm() {
   const mutation = useLoginUser({
     mutation: {
       onSuccess: (data) => {
-        // loginUser devuelve AuthResponse → el user está anidado
-        if (data.user) login(data.user);
+        if (data.user && data.accessToken) login(data.user, data.accessToken);
         navigate('/dashboard');
       },
     },
@@ -24,15 +23,13 @@ export function useLoginForm() {
 }
 
 export function useRegisterForm() {
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const mutation = useRegisterUser({
     mutation: {
-      onSuccess: (data) => {
-        // registerUser devuelve User directamente (no AuthResponse)
-        login(data);
-        navigate('/dashboard');
+      onSuccess: () => {
+        // registerUser devuelve User sin token — redirigir al login
+        navigate('/login');
       },
     },
   });
