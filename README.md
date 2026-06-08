@@ -39,7 +39,7 @@ Sigue **Screaming Architecture** (Feature-First): la estructura de carpetas refl
 
 ---
 
-## Instalación
+## Instalación y arranque
 
 ```bash
 # 1. Instalar dependencias
@@ -47,9 +47,16 @@ npm install
 
 # 2. Generar hooks y tipos desde el contrato OpenAPI
 npm run generate-api
+
+# 3. Iniciar el servidor de desarrollo
+npm run dev
 ```
 
+La aplicación quedará disponible en `http://localhost:5173`.
+
 El paso 2 lee `../alpha_spec/docs/openapi.yaml` y genera automáticamente los hooks de TanStack Query y los tipos en `src/api/generated/`. **Nunca editar esa carpeta a mano.**
+
+> **Nota:** el backend debe estar corriendo localmente para que las llamadas a la API funcionen. Ver [`alpha_backend/README.md`](../alpha_backend/README.md).
 
 ---
 
