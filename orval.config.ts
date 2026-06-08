@@ -1,10 +1,8 @@
 import { defineConfig } from 'orval';
 
 export default defineConfig({
-  projectAlpha: {
-    input: {
-      target: './.openapi-temp.yaml',
-    },
+  alphaSpec: {
+    input: '../alpha_spec/docs/openapi.yaml', // ← ruta local, sin red, sin token
     output: {
       mode: 'tags-split',
       target: './src/api/generated',
