@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Card, CardBody, CardHeader, Spinner, ErrorMessage } from '@/shared';
 import { usePlanDetail, usePlanEdit } from '../hooks/use-plans';
 import { PlanForm } from './PlanForm';
@@ -29,6 +29,12 @@ export function PlanEditPage() {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-8">
+      <Link
+        to={`/plans/${planId}`}
+        className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 mb-6"
+      >
+        ← Volver al plan
+      </Link>
       <Card>
         <CardHeader>
           <h1 className="text-xl font-bold text-gray-900">Editar plan</h1>

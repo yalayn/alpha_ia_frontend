@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Card, CardBody, CardHeader, ErrorMessage, Spinner, Button } from '@/shared';
 import { usePlanDetail, usePlanDelete } from '../hooks/use-plans';
 import { formatPlanPrice } from '../utils/plans.utils';
@@ -22,6 +22,12 @@ export function PlanDetailPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
+      <Link
+        to="/plans"
+        className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 mb-6"
+      >
+        ← Volver a Planes
+      </Link>
       <Card>
         <CardHeader>
           <div className="flex items-start justify-between gap-4">
