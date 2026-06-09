@@ -29,6 +29,8 @@ export const ErrorResponseError = {
   subscription_not_found: 'subscription_not_found',
   subscription_already_active: 'subscription_already_active',
   subscription_already_canceled: 'subscription_already_canceled',
+  subscription_not_active: 'subscription_not_active',
+  same_plan_change: 'same_plan_change',
   payment_processing_failed: 'payment_processing_failed',
   service_unavailable: 'service_unavailable',
   internal_server_error: 'internal_server_error',

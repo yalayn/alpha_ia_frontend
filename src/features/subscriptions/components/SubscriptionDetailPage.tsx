@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardBody, CardHeader, CardFooter, Button, ErrorMessage } from '@/shared';
 import { useSubscriptionDetail, useSubscriptionActions } from '../hooks/use-subscription';
 import { SubscriptionStatusBadge } from './SubscriptionStatusBadge';
@@ -7,6 +7,7 @@ import { formatDate } from '../utils/subscriptions.utils';
 
 export function SubscriptionDetailPage() {
   const { subscriptionId } = useParams<{ subscriptionId: string }>();
+  const navigate = useNavigate();
   const { subscription, isLoading, error } = useSubscriptionDetail(subscriptionId ?? '');
   const { cancel, isPending } = useSubscriptionActions();
 
@@ -32,7 +33,14 @@ export function SubscriptionDetailPage() {
           )}
         </CardBody>
         {subscription.status === 'active' && (
-          <CardFooter>
+          <CardFooter className="flex gap-3">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => navigate(`/subscriptions/${subscription.id}/change-plan`)}
+            >
+              Cambiar plan
+            </Button>
             <Button
               variant="danger"
               size="sm"

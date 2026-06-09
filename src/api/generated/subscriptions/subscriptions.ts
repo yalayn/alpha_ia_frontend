@@ -34,6 +34,8 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  ChangePlanRequest,
+  ChangePlanResult,
   ErrorResponse,
   InternalServerErrorResponse,
   Subscription,
@@ -267,6 +269,80 @@ export const useCancelSubscription = <TError = ErrorResponse | ErrorResponse | I
       > => {
 
       const mutationOptions = getCancelSubscriptionMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    /**
+ * Cambia el plan activo de una suscripción. Soporta upgrade y downgrade.
+
+Reglas de efecto:
+- Upgrade o downgrade mismo intervalo → `changeType: immediate`, nuevo `planId` activo al instante.
+- Downgrade de intervalo anual a mensual → `changeType: scheduled`, el plan actual se mantiene
+  hasta `endDate`; el nuevo plan queda registrado en `scheduledPlanId`.
+
+El pago solo se procesa para cambios `immediate`. Si el pago falla, la suscripción
+no se modifica y se retorna 422.
+
+ * @summary Cambiar el plan de una suscripción activa
+ */
+export const changePlan = (
+    subscriptionId: string,
+    changePlanRequest: ChangePlanRequest,
+ ) => {
+      
+      
+      return customInstance<ChangePlanResult>(
+      {url: `/subscriptions/${subscriptionId}/plan`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: changePlanRequest
+    },
+      );
+    }
+  
+
+
+export const getChangePlanMutationOptions = <TError = ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePlan>>, TError,{subscriptionId: string;data: ChangePlanRequest}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof changePlan>>, TError,{subscriptionId: string;data: ChangePlanRequest}, TContext> => {
+
+const mutationKey = ['changePlan'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof changePlan>>, {subscriptionId: string;data: ChangePlanRequest}> = (props) => {
+          const {subscriptionId,data} = props ?? {};
+
+          return  changePlan(subscriptionId,data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ChangePlanMutationResult = NonNullable<Awaited<ReturnType<typeof changePlan>>>
+    export type ChangePlanMutationBody = ChangePlanRequest
+    export type ChangePlanMutationError = ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse
+
+    /**
+ * @summary Cambiar el plan de una suscripción activa
+ */
+export const useChangePlan = <TError = ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePlan>>, TError,{subscriptionId: string;data: ChangePlanRequest}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof changePlan>>,
+        TError,
+        {subscriptionId: string;data: ChangePlanRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getChangePlanMutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }

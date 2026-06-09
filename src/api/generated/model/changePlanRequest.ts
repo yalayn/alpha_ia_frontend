@@ -14,12 +14,16 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 
  * OpenAPI spec version: 1.0.0
  */
-import type { RegisterRequestRole } from './registerRequestRole';
 
-export interface RegisterRequest {
-  email: string;
-  /** @minLength 6 */
-  password: string;
-  name: string;
-  role?: RegisterRequestRole;
+export interface ChangePlanRequest {
+  /**
+   * ID del plan al que se desea cambiar
+   * @minLength 1
+   */
+  newPlanId: string;
+  /**
+   * ID del método de pago (requerido siempre; solo se cobra en cambios immediate)
+   * @minLength 1
+   */
+  paymentMethodId: string;
 }

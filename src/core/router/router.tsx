@@ -24,8 +24,14 @@ const PlanCreatePage = lazy(() =>
 const SubscriptionDetailPage = lazy(() =>
   import('@/features/subscriptions').then((m) => ({ default: m.SubscriptionDetailPage })),
 );
+const SubscribePlanPage = lazy(() =>
+  import('@/features/subscriptions').then((m) => ({ default: m.SubscribePlanPage })),
+);
 const AccessControlPage = lazy(() =>
   import('@/features/access-control').then((m) => ({ default: m.AccessControlPage })),
+);
+const ChangePlanPage = lazy(() =>
+  import('@/features/plan-change').then((m) => ({ default: m.ChangePlanPage })),
 );
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
@@ -84,8 +90,16 @@ export const router = createBrowserRouter([
         element: <SuspenseWrapper><PlanDetailPage /></SuspenseWrapper>,
       },
       {
+        path: '/subscriptions/new',
+        element: <SuspenseWrapper><SubscribePlanPage /></SuspenseWrapper>,
+      },
+      {
         path: '/subscriptions/:subscriptionId',
         element: <SuspenseWrapper><SubscriptionDetailPage /></SuspenseWrapper>,
+      },
+      {
+        path: '/subscriptions/:subscriptionId/change-plan',
+        element: <SuspenseWrapper><ChangePlanPage /></SuspenseWrapper>,
       },
       {
         path: '/access',

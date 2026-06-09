@@ -14,12 +14,12 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 
  * OpenAPI spec version: 1.0.0
  */
-import type { RegisterRequestRole } from './registerRequestRole';
 
-export interface RegisterRequest {
-  email: string;
-  /** @minLength 6 */
-  password: string;
-  name: string;
-  role?: RegisterRequestRole;
-}
+export type RegisterRequestRole = typeof RegisterRequestRole[keyof typeof RegisterRequestRole];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RegisterRequestRole = {
+  admin: 'admin',
+  customer: 'customer',
+} as const;

@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "prepare": "git config core.hooksPath .githooks",
-    "generate-api": "curl -sSf https://raw.githubusercontent.com/yalayn/alpha_ia/main/docs/openapi.yaml -o .openapi-temp.yaml && orval && rm -f .openapi-temp.yaml",
+    "generate-api": "orval",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
