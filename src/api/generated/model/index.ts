@@ -43,6 +43,8 @@ export * from './subscription';
 export * from './subscriptionRequest';
 export * from './subscriptionStatus';
 export * from './unauthorizedResponse';
+export * from './updatePlanRequest';
+export * from './updatePlanRequestInterval';
 export * from './user';
 export * from './userRole';
 export * from './validateAccessRequest';

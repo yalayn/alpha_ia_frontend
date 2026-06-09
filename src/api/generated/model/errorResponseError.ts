@@ -32,6 +32,8 @@ export const ErrorResponseError = {
   subscription_not_active: 'subscription_not_active',
   same_plan_change: 'same_plan_change',
   payment_processing_failed: 'payment_processing_failed',
+  plan_has_active_subscriptions: 'plan_has_active_subscriptions',
+  plan_interval_locked: 'plan_interval_locked',
   service_unavailable: 'service_unavailable',
   internal_server_error: 'internal_server_error',
 } as const;

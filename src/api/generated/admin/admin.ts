@@ -38,7 +38,8 @@ import type {
   ErrorResponse,
   InternalServerErrorResponse,
   ListPlans200,
-  Plan
+  Plan,
+  UpdatePlanRequest
 } from '.././model';
 
 import { customInstance } from '../../client';
@@ -297,3 +298,129 @@ export function useGetPlanById<TData = Awaited<ReturnType<typeof getPlanById>>, 
 
 
 
+/**
+ * @summary Editar un plan existente (actualización parcial)
+ */
+export const updatePlan = (
+    planId: string,
+    updatePlanRequest: UpdatePlanRequest,
+ ) => {
+      
+      
+      return customInstance<Plan>(
+      {url: `/plans/${planId}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: updatePlanRequest
+    },
+      );
+    }
+  
+
+
+export const getUpdatePlanMutationOptions = <TError = ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePlan>>, TError,{planId: string;data: UpdatePlanRequest}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof updatePlan>>, TError,{planId: string;data: UpdatePlanRequest}, TContext> => {
+
+const mutationKey = ['updatePlan'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePlan>>, {planId: string;data: UpdatePlanRequest}> = (props) => {
+          const {planId,data} = props ?? {};
+
+          return  updatePlan(planId,data,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdatePlanMutationResult = NonNullable<Awaited<ReturnType<typeof updatePlan>>>
+    export type UpdatePlanMutationBody = UpdatePlanRequest
+    export type UpdatePlanMutationError = ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse
+
+    /**
+ * @summary Editar un plan existente (actualización parcial)
+ */
+export const useUpdatePlan = <TError = ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePlan>>, TError,{planId: string;data: UpdatePlanRequest}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof updatePlan>>,
+        TError,
+        {planId: string;data: UpdatePlanRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getUpdatePlanMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    /**
+ * @summary Eliminar un plan sin suscripciones activas
+ */
+export const deletePlan = (
+    planId: string,
+ ) => {
+      
+      
+      return customInstance<Plan>(
+      {url: `/plans/${planId}`, method: 'DELETE'
+    },
+      );
+    }
+  
+
+
+export const getDeletePlanMutationOptions = <TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePlan>>, TError,{planId: string}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof deletePlan>>, TError,{planId: string}, TContext> => {
+
+const mutationKey = ['deletePlan'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deletePlan>>, {planId: string}> = (props) => {
+          const {planId} = props ?? {};
+
+          return  deletePlan(planId,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeletePlanMutationResult = NonNullable<Awaited<ReturnType<typeof deletePlan>>>
+    
+    export type DeletePlanMutationError = ErrorResponse | ErrorResponse | InternalServerErrorResponse
+
+    /**
+ * @summary Eliminar un plan sin suscripciones activas
+ */
+export const useDeletePlan = <TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePlan>>, TError,{planId: string}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deletePlan>>,
+        TError,
+        {planId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeletePlanMutationOptions(options);
+
+      return useMutation(mutationOptions, queryClient);
+    }
+    

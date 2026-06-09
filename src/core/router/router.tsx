@@ -21,6 +21,9 @@ const PlanDetailPage = lazy(() =>
 const PlanCreatePage = lazy(() =>
   import('@/features/plans').then((m) => ({ default: m.PlanCreatePage })),
 );
+const PlanEditPage = lazy(() =>
+  import('@/features/plans').then((m) => ({ default: m.PlanEditPage })),
+);
 const SubscriptionDetailPage = lazy(() =>
   import('@/features/subscriptions').then((m) => ({ default: m.SubscriptionDetailPage })),
 );
@@ -88,6 +91,14 @@ export const router = createBrowserRouter([
       {
         path: '/plans/:planId',
         element: <SuspenseWrapper><PlanDetailPage /></SuspenseWrapper>,
+      },
+      {
+        path: '/plans/:planId/edit',
+        element: (
+          <RequireAdmin>
+            <SuspenseWrapper><PlanEditPage /></SuspenseWrapper>
+          </RequireAdmin>
+        ),
       },
       {
         path: '/subscriptions/new',
