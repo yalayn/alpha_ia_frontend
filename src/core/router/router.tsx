@@ -36,6 +36,9 @@ const AccessControlPage = lazy(() =>
 const ChangePlanPage = lazy(() =>
   import('@/features/plan-change').then((m) => ({ default: m.ChangePlanPage })),
 );
+const MySubscriptionPage = lazy(() =>
+  import('@/features/subscription-management').then((m) => ({ default: m.MySubscriptionPage })),
+);
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -99,6 +102,14 @@ export const router = createBrowserRouter([
             <SuspenseWrapper><PlanEditPage /></SuspenseWrapper>
           </RequireAdmin>
         ),
+      },
+      {
+        path: '/subscription',
+        element: <SuspenseWrapper><MySubscriptionPage /></SuspenseWrapper>,
+      },
+      {
+        path: '/subscription/new',
+        element: <SuspenseWrapper><SubscribePlanPage /></SuspenseWrapper>,
       },
       {
         path: '/subscriptions/new',
