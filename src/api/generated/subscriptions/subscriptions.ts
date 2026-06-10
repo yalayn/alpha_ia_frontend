@@ -346,4 +346,94 @@ export const useChangePlan = <TError = ErrorResponse | ErrorResponse | ErrorResp
 
       return useMutation(mutationOptions, queryClient);
     }
+    /**
+ * @summary Obtener la suscripción más reciente de un cliente
+ */
+export const getCustomerSubscription = (
+    customerId: string,
+ signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<Subscription>(
+      {url: `/subscriptions/customer/${customerId}`, method: 'GET', signal
+    },
+      );
+    }
+  
+
+
+
+export const getGetCustomerSubscriptionQueryKey = (customerId?: string,) => {
+    return [
+    `/subscriptions/customer/${customerId}`
+    ] as const;
+    }
+
     
+export const getGetCustomerSubscriptionQueryOptions = <TData = Awaited<ReturnType<typeof getCustomerSubscription>>, TError = ErrorResponse | InternalServerErrorResponse>(customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerSubscription>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCustomerSubscriptionQueryKey(customerId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCustomerSubscription>>> = ({ signal }) => getCustomerSubscription(customerId, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(customerId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCustomerSubscription>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
+}
+
+export type GetCustomerSubscriptionQueryResult = NonNullable<Awaited<ReturnType<typeof getCustomerSubscription>>>
+export type GetCustomerSubscriptionQueryError = ErrorResponse | InternalServerErrorResponse
+
+
+export function useGetCustomerSubscription<TData = Awaited<ReturnType<typeof getCustomerSubscription>>, TError = ErrorResponse | InternalServerErrorResponse>(
+ customerId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerSubscription>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getCustomerSubscription>>,
+          TError,
+          Awaited<ReturnType<typeof getCustomerSubscription>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetCustomerSubscription<TData = Awaited<ReturnType<typeof getCustomerSubscription>>, TError = ErrorResponse | InternalServerErrorResponse>(
+ customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerSubscription>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getCustomerSubscription>>,
+          TError,
+          Awaited<ReturnType<typeof getCustomerSubscription>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+export function useGetCustomerSubscription<TData = Awaited<ReturnType<typeof getCustomerSubscription>>, TError = ErrorResponse | InternalServerErrorResponse>(
+ customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerSubscription>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+/**
+ * @summary Obtener la suscripción más reciente de un cliente
+ */
+
+export function useGetCustomerSubscription<TData = Awaited<ReturnType<typeof getCustomerSubscription>>, TError = ErrorResponse | InternalServerErrorResponse>(
+ customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerSubscription>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+
+  const queryOptions = getGetCustomerSubscriptionQueryOptions(customerId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
