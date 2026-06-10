@@ -6,6 +6,7 @@ import { cn } from '@/shared/utils/cn';
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', adminOnly: false },
   { to: '/plans', label: 'Planes', adminOnly: false },
+  { to: '/subscription', label: 'Suscripción', adminOnly: false },
   { to: '/access', label: 'Validar Acceso', adminOnly: false },
 ];
 
