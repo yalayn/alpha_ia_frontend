@@ -15,11 +15,10 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
  * OpenAPI spec version: 1.0.0
  */
 
-export type UserRole = typeof UserRole[keyof typeof UserRole];
-
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UserRole = {
-  admin: 'admin',
-  customer: 'customer',
+  admin: "admin",
+  customer: "customer",
 } as const;

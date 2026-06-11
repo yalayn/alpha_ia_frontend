@@ -15,11 +15,10 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
  * OpenAPI spec version: 1.0.0
  */
 
-export type PlanInterval = typeof PlanInterval[keyof typeof PlanInterval];
-
+export type PlanInterval = (typeof PlanInterval)[keyof typeof PlanInterval];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PlanInterval = {
-  month: 'month',
-  year: 'year',
+  month: "month",
+  year: "year",
 } as const;

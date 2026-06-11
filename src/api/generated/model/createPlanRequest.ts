@@ -14,7 +14,7 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 
  * OpenAPI spec version: 1.0.0
  */
-import type { CreatePlanRequestInterval } from './createPlanRequestInterval';
+import type { CreatePlanRequestInterval } from "./createPlanRequestInterval";
 
 export interface CreatePlanRequest {
   /**

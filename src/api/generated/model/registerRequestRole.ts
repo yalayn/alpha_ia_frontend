@@ -15,11 +15,11 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
  * OpenAPI spec version: 1.0.0
  */
 
-export type RegisterRequestRole = typeof RegisterRequestRole[keyof typeof RegisterRequestRole];
-
+export type RegisterRequestRole =
+  (typeof RegisterRequestRole)[keyof typeof RegisterRequestRole];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RegisterRequestRole = {
-  admin: 'admin',
-  customer: 'customer',
+  admin: "admin",
+  customer: "customer",
 } as const;

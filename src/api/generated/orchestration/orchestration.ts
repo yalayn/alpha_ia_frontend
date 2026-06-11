@@ -14,27 +14,22 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation
-} from '@tanstack/react-query';
+import { useMutation } from "@tanstack/react-query";
 import type {
   MutationFunction,
   QueryClient,
   UseMutationOptions,
-  UseMutationResult
-} from '@tanstack/react-query';
+  UseMutationResult,
+} from "@tanstack/react-query";
 
 import type {
   AccessResult,
   ErrorResponse,
   InternalServerErrorResponse,
-  ValidateAccessRequest
-} from '.././model';
+  ValidateAccessRequest,
+} from ".././model";
 
-import { customInstance } from '../../client';
-
-
-
+import { customInstance } from "../../client";
 
 /**
  * Orquesta la validación de si un cliente tiene acceso a una funcionalidad
@@ -54,64 +49,86 @@ en `hasAccess: false` con `reason`.
  * @summary Validar acceso a una funcionalidad
  */
 export const validateAccess = (
-    validateAccessRequest: ValidateAccessRequest,
- signal?: AbortSignal
+  validateAccessRequest: ValidateAccessRequest,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<AccessResult>(
-      {url: `/access/validate`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: validateAccessRequest, signal
-    },
-      );
-    }
-  
+  return customInstance<AccessResult>({
+    url: `/access/validate`,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    data: validateAccessRequest,
+    signal,
+  });
+};
 
+export const getValidateAccessMutationOptions = <
+  TError = ErrorResponse | InternalServerErrorResponse,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof validateAccess>>,
+    TError,
+    { data: ValidateAccessRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof validateAccess>>,
+  TError,
+  { data: ValidateAccessRequest },
+  TContext
+> => {
+  const mutationKey = ["validateAccess"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
 
-export const getValidateAccessMutationOptions = <TError = ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof validateAccess>>, TError,{data: ValidateAccessRequest}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof validateAccess>>, TError,{data: ValidateAccessRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof validateAccess>>,
+    { data: ValidateAccessRequest }
+  > = (props) => {
+    const { data } = props ?? {};
 
-const mutationKey = ['validateAccess'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
+    return validateAccess(data);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type ValidateAccessMutationResult = NonNullable<
+  Awaited<ReturnType<typeof validateAccess>>
+>;
+export type ValidateAccessMutationBody = ValidateAccessRequest;
+export type ValidateAccessMutationError =
+  | ErrorResponse
+  | InternalServerErrorResponse;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof validateAccess>>, {data: ValidateAccessRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  validateAccess(data,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type ValidateAccessMutationResult = NonNullable<Awaited<ReturnType<typeof validateAccess>>>
-    export type ValidateAccessMutationBody = ValidateAccessRequest
-    export type ValidateAccessMutationError = ErrorResponse | InternalServerErrorResponse
-
-    /**
+/**
  * @summary Validar acceso a una funcionalidad
  */
-export const useValidateAccess = <TError = ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof validateAccess>>, TError,{data: ValidateAccessRequest}, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof validateAccess>>,
-        TError,
-        {data: ValidateAccessRequest},
-        TContext
-      > => {
+export const useValidateAccess = <
+  TError = ErrorResponse | InternalServerErrorResponse,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof validateAccess>>,
+      TError,
+      { data: ValidateAccessRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof validateAccess>>,
+  TError,
+  { data: ValidateAccessRequest },
+  TContext
+> => {
+  const mutationOptions = getValidateAccessMutationOptions(options);
 
-      const mutationOptions = getValidateAccessMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
+  return useMutation(mutationOptions, queryClient);
+};

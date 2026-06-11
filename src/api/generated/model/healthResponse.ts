@@ -14,8 +14,8 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 
  * OpenAPI spec version: 1.0.0
  */
-import type { HealthResponseStatus } from './healthResponseStatus';
-import type { HealthResponseDatabase } from './healthResponseDatabase';
+import type { HealthResponseStatus } from "./healthResponseStatus";
+import type { HealthResponseDatabase } from "./healthResponseDatabase";
 
 export interface HealthResponse {
   status: HealthResponseStatus;

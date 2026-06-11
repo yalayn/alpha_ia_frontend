@@ -18,11 +18,11 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 /**
  * Frecuencia de facturación
  */
-export type CreatePlanRequestInterval = typeof CreatePlanRequestInterval[keyof typeof CreatePlanRequestInterval];
-
+export type CreatePlanRequestInterval =
+  (typeof CreatePlanRequestInterval)[keyof typeof CreatePlanRequestInterval];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreatePlanRequestInterval = {
-  month: 'month',
-  year: 'year',
+  month: "month",
+  year: "year",
 } as const;

@@ -15,11 +15,11 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
  * OpenAPI spec version: 1.0.0
  */
 
-export type HealthResponseStatus = typeof HealthResponseStatus[keyof typeof HealthResponseStatus];
-
+export type HealthResponseStatus =
+  (typeof HealthResponseStatus)[keyof typeof HealthResponseStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const HealthResponseStatus = {
-  ok: 'ok',
-  degraded: 'degraded',
+  ok: "ok",
+  degraded: "degraded",
 } as const;

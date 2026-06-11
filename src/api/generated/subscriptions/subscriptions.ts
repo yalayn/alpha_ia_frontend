@@ -14,10 +14,7 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -30,8 +27,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
+  UseQueryResult,
+} from "@tanstack/react-query";
 
 import type {
   ChangePlanRequest,
@@ -39,13 +36,10 @@ import type {
   ErrorResponse,
   InternalServerErrorResponse,
   Subscription,
-  SubscriptionRequest
-} from '.././model';
+  SubscriptionRequest,
+} from ".././model";
 
-import { customInstance } from '../../client';
-
-
-
+import { customInstance } from "../../client";
 
 /**
  * Crea una suscripción activa para el cliente especificado. Si el cliente
@@ -60,219 +54,347 @@ El flujo interno orquesta:
  * @summary Suscribir un cliente a un plan
  */
 export const subscribeCustomer = (
-    subscriptionRequest: SubscriptionRequest,
- signal?: AbortSignal
+  subscriptionRequest: SubscriptionRequest,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<Subscription>(
-      {url: `/subscriptions`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: subscriptionRequest, signal
-    },
-      );
-    }
-  
+  return customInstance<Subscription>({
+    url: `/subscriptions`,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    data: subscriptionRequest,
+    signal,
+  });
+};
 
+export const getSubscribeCustomerMutationOptions = <
+  TError =
+    | ErrorResponse
+    | ErrorResponse
+    | ErrorResponse
+    | ErrorResponse
+    | InternalServerErrorResponse,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof subscribeCustomer>>,
+    TError,
+    { data: SubscriptionRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof subscribeCustomer>>,
+  TError,
+  { data: SubscriptionRequest },
+  TContext
+> => {
+  const mutationKey = ["subscribeCustomer"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
 
-export const getSubscribeCustomerMutationOptions = <TError = ErrorResponse | ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof subscribeCustomer>>, TError,{data: SubscriptionRequest}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof subscribeCustomer>>, TError,{data: SubscriptionRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof subscribeCustomer>>,
+    { data: SubscriptionRequest }
+  > = (props) => {
+    const { data } = props ?? {};
 
-const mutationKey = ['subscribeCustomer'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
+    return subscribeCustomer(data);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type SubscribeCustomerMutationResult = NonNullable<
+  Awaited<ReturnType<typeof subscribeCustomer>>
+>;
+export type SubscribeCustomerMutationBody = SubscriptionRequest;
+export type SubscribeCustomerMutationError =
+  | ErrorResponse
+  | ErrorResponse
+  | ErrorResponse
+  | ErrorResponse
+  | InternalServerErrorResponse;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof subscribeCustomer>>, {data: SubscriptionRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  subscribeCustomer(data,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type SubscribeCustomerMutationResult = NonNullable<Awaited<ReturnType<typeof subscribeCustomer>>>
-    export type SubscribeCustomerMutationBody = SubscriptionRequest
-    export type SubscribeCustomerMutationError = ErrorResponse | ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse
-
-    /**
+/**
  * @summary Suscribir un cliente a un plan
  */
-export const useSubscribeCustomer = <TError = ErrorResponse | ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof subscribeCustomer>>, TError,{data: SubscriptionRequest}, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof subscribeCustomer>>,
-        TError,
-        {data: SubscriptionRequest},
-        TContext
-      > => {
+export const useSubscribeCustomer = <
+  TError =
+    | ErrorResponse
+    | ErrorResponse
+    | ErrorResponse
+    | ErrorResponse
+    | InternalServerErrorResponse,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof subscribeCustomer>>,
+      TError,
+      { data: SubscriptionRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof subscribeCustomer>>,
+  TError,
+  { data: SubscriptionRequest },
+  TContext
+> => {
+  const mutationOptions = getSubscribeCustomerMutationOptions(options);
 
-      const mutationOptions = getSubscribeCustomerMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * @summary Obtener una suscripción por ID
  */
 export const getSubscriptionById = (
-    subscriptionId: string,
- signal?: AbortSignal
+  subscriptionId: string,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<Subscription>(
-      {url: `/subscriptions/${subscriptionId}`, method: 'GET', signal
-    },
-      );
-    }
-  
+  return customInstance<Subscription>({
+    url: `/subscriptions/${subscriptionId}`,
+    method: "GET",
+    signal,
+  });
+};
 
+export const getGetSubscriptionByIdQueryKey = (subscriptionId?: string) => {
+  return [`/subscriptions/${subscriptionId}`] as const;
+};
 
-
-export const getGetSubscriptionByIdQueryKey = (subscriptionId?: string,) => {
-    return [
-    `/subscriptions/${subscriptionId}`
-    ] as const;
-    }
-
-    
-export const getGetSubscriptionByIdQueryOptions = <TData = Awaited<ReturnType<typeof getSubscriptionById>>, TError = ErrorResponse | InternalServerErrorResponse>(subscriptionId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSubscriptionById>>, TError, TData>>, }
+export const getGetSubscriptionByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof getSubscriptionById>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  subscriptionId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscriptionById>>,
+        TError,
+        TData
+      >
+    >;
+  },
 ) => {
+  const { query: queryOptions } = options ?? {};
 
-const {query: queryOptions} = options ?? {};
+  const queryKey =
+    queryOptions?.queryKey ?? getGetSubscriptionByIdQueryKey(subscriptionId);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetSubscriptionByIdQueryKey(subscriptionId);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getSubscriptionById>>
+  > = ({ signal }) => getSubscriptionById(subscriptionId, signal);
 
-  
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!subscriptionId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getSubscriptionById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSubscriptionById>>> = ({ signal }) => getSubscriptionById(subscriptionId, signal);
+export type GetSubscriptionByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getSubscriptionById>>
+>;
+export type GetSubscriptionByIdQueryError =
+  | ErrorResponse
+  | InternalServerErrorResponse;
 
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(subscriptionId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSubscriptionById>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
-}
-
-export type GetSubscriptionByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getSubscriptionById>>>
-export type GetSubscriptionByIdQueryError = ErrorResponse | InternalServerErrorResponse
-
-
-export function useGetSubscriptionById<TData = Awaited<ReturnType<typeof getSubscriptionById>>, TError = ErrorResponse | InternalServerErrorResponse>(
- subscriptionId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSubscriptionById>>, TError, TData>> & Pick<
+export function useGetSubscriptionById<
+  TData = Awaited<ReturnType<typeof getSubscriptionById>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  subscriptionId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscriptionById>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getSubscriptionById>>,
           TError,
           Awaited<ReturnType<typeof getSubscriptionById>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetSubscriptionById<TData = Awaited<ReturnType<typeof getSubscriptionById>>, TError = ErrorResponse | InternalServerErrorResponse>(
- subscriptionId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSubscriptionById>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData>;
+};
+export function useGetSubscriptionById<
+  TData = Awaited<ReturnType<typeof getSubscriptionById>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  subscriptionId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscriptionById>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getSubscriptionById>>,
           TError,
           Awaited<ReturnType<typeof getSubscriptionById>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetSubscriptionById<TData = Awaited<ReturnType<typeof getSubscriptionById>>, TError = ErrorResponse | InternalServerErrorResponse>(
- subscriptionId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSubscriptionById>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+export function useGetSubscriptionById<
+  TData = Awaited<ReturnType<typeof getSubscriptionById>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  subscriptionId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscriptionById>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 /**
  * @summary Obtener una suscripción por ID
  */
 
-export function useGetSubscriptionById<TData = Awaited<ReturnType<typeof getSubscriptionById>>, TError = ErrorResponse | InternalServerErrorResponse>(
- subscriptionId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSubscriptionById>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+export function useGetSubscriptionById<
+  TData = Awaited<ReturnType<typeof getSubscriptionById>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  subscriptionId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getSubscriptionById>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+  const queryOptions = getGetSubscriptionByIdQueryOptions(
+    subscriptionId,
+    options,
+  );
 
-  const queryOptions = getGetSubscriptionByIdQueryOptions(subscriptionId,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
 
+/**
+ * @summary Cancelar una suscripción
+ */
+export const cancelSubscription = (subscriptionId: string) => {
+  return customInstance<Subscription>({
+    url: `/subscriptions/${subscriptionId}`,
+    method: "DELETE",
+  });
+};
 
+export const getCancelSubscriptionMutationOptions = <
+  TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof cancelSubscription>>,
+    TError,
+    { subscriptionId: string },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof cancelSubscription>>,
+  TError,
+  { subscriptionId: string },
+  TContext
+> => {
+  const mutationKey = ["cancelSubscription"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof cancelSubscription>>,
+    { subscriptionId: string }
+  > = (props) => {
+    const { subscriptionId } = props ?? {};
+
+    return cancelSubscription(subscriptionId);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CancelSubscriptionMutationResult = NonNullable<
+  Awaited<ReturnType<typeof cancelSubscription>>
+>;
+
+export type CancelSubscriptionMutationError =
+  | ErrorResponse
+  | ErrorResponse
+  | InternalServerErrorResponse;
 
 /**
  * @summary Cancelar una suscripción
  */
-export const cancelSubscription = (
-    subscriptionId: string,
- ) => {
-      
-      
-      return customInstance<Subscription>(
-      {url: `/subscriptions/${subscriptionId}`, method: 'DELETE'
-    },
-      );
-    }
-  
+export const useCancelSubscription = <
+  TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof cancelSubscription>>,
+      TError,
+      { subscriptionId: string },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof cancelSubscription>>,
+  TError,
+  { subscriptionId: string },
+  TContext
+> => {
+  const mutationOptions = getCancelSubscriptionMutationOptions(options);
 
-
-export const getCancelSubscriptionMutationOptions = <TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelSubscription>>, TError,{subscriptionId: string}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof cancelSubscription>>, TError,{subscriptionId: string}, TContext> => {
-
-const mutationKey = ['cancelSubscription'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof cancelSubscription>>, {subscriptionId: string}> = (props) => {
-          const {subscriptionId} = props ?? {};
-
-          return  cancelSubscription(subscriptionId,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CancelSubscriptionMutationResult = NonNullable<Awaited<ReturnType<typeof cancelSubscription>>>
-    
-    export type CancelSubscriptionMutationError = ErrorResponse | ErrorResponse | InternalServerErrorResponse
-
-    /**
- * @summary Cancelar una suscripción
- */
-export const useCancelSubscription = <TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof cancelSubscription>>, TError,{subscriptionId: string}, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof cancelSubscription>>,
-        TError,
-        {subscriptionId: string},
-        TContext
-      > => {
-
-      const mutationOptions = getCancelSubscriptionMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * Cambia el plan activo de una suscripción. Soporta upgrade y downgrade.
 
 Reglas de efecto:
@@ -286,154 +408,256 @@ no se modifica y se retorna 422.
  * @summary Cambiar el plan de una suscripción activa
  */
 export const changePlan = (
-    subscriptionId: string,
-    changePlanRequest: ChangePlanRequest,
- ) => {
-      
-      
-      return customInstance<ChangePlanResult>(
-      {url: `/subscriptions/${subscriptionId}/plan`, method: 'PATCH',
-      headers: {'Content-Type': 'application/json', },
-      data: changePlanRequest
-    },
-      );
-    }
-  
+  subscriptionId: string,
+  changePlanRequest: ChangePlanRequest,
+) => {
+  return customInstance<ChangePlanResult>({
+    url: `/subscriptions/${subscriptionId}/plan`,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    data: changePlanRequest,
+  });
+};
 
+export const getChangePlanMutationOptions = <
+  TError =
+    | ErrorResponse
+    | ErrorResponse
+    | ErrorResponse
+    | InternalServerErrorResponse,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof changePlan>>,
+    TError,
+    { subscriptionId: string; data: ChangePlanRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof changePlan>>,
+  TError,
+  { subscriptionId: string; data: ChangePlanRequest },
+  TContext
+> => {
+  const mutationKey = ["changePlan"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
 
-export const getChangePlanMutationOptions = <TError = ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePlan>>, TError,{subscriptionId: string;data: ChangePlanRequest}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof changePlan>>, TError,{subscriptionId: string;data: ChangePlanRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof changePlan>>,
+    { subscriptionId: string; data: ChangePlanRequest }
+  > = (props) => {
+    const { subscriptionId, data } = props ?? {};
 
-const mutationKey = ['changePlan'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
+    return changePlan(subscriptionId, data);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type ChangePlanMutationResult = NonNullable<
+  Awaited<ReturnType<typeof changePlan>>
+>;
+export type ChangePlanMutationBody = ChangePlanRequest;
+export type ChangePlanMutationError =
+  | ErrorResponse
+  | ErrorResponse
+  | ErrorResponse
+  | InternalServerErrorResponse;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof changePlan>>, {subscriptionId: string;data: ChangePlanRequest}> = (props) => {
-          const {subscriptionId,data} = props ?? {};
-
-          return  changePlan(subscriptionId,data,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type ChangePlanMutationResult = NonNullable<Awaited<ReturnType<typeof changePlan>>>
-    export type ChangePlanMutationBody = ChangePlanRequest
-    export type ChangePlanMutationError = ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse
-
-    /**
+/**
  * @summary Cambiar el plan de una suscripción activa
  */
-export const useChangePlan = <TError = ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePlan>>, TError,{subscriptionId: string;data: ChangePlanRequest}, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof changePlan>>,
-        TError,
-        {subscriptionId: string;data: ChangePlanRequest},
-        TContext
-      > => {
+export const useChangePlan = <
+  TError =
+    | ErrorResponse
+    | ErrorResponse
+    | ErrorResponse
+    | InternalServerErrorResponse,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof changePlan>>,
+      TError,
+      { subscriptionId: string; data: ChangePlanRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof changePlan>>,
+  TError,
+  { subscriptionId: string; data: ChangePlanRequest },
+  TContext
+> => {
+  const mutationOptions = getChangePlanMutationOptions(options);
 
-      const mutationOptions = getChangePlanMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * @summary Obtener la suscripción más reciente de un cliente
  */
 export const getCustomerSubscription = (
-    customerId: string,
- signal?: AbortSignal
+  customerId: string,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<Subscription>(
-      {url: `/subscriptions/customer/${customerId}`, method: 'GET', signal
-    },
-      );
-    }
-  
+  return customInstance<Subscription>({
+    url: `/subscriptions/customer/${customerId}`,
+    method: "GET",
+    signal,
+  });
+};
 
+export const getGetCustomerSubscriptionQueryKey = (customerId?: string) => {
+  return [`/subscriptions/customer/${customerId}`] as const;
+};
 
-
-export const getGetCustomerSubscriptionQueryKey = (customerId?: string,) => {
-    return [
-    `/subscriptions/customer/${customerId}`
-    ] as const;
-    }
-
-    
-export const getGetCustomerSubscriptionQueryOptions = <TData = Awaited<ReturnType<typeof getCustomerSubscription>>, TError = ErrorResponse | InternalServerErrorResponse>(customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerSubscription>>, TError, TData>>, }
+export const getGetCustomerSubscriptionQueryOptions = <
+  TData = Awaited<ReturnType<typeof getCustomerSubscription>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  customerId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCustomerSubscription>>,
+        TError,
+        TData
+      >
+    >;
+  },
 ) => {
+  const { query: queryOptions } = options ?? {};
 
-const {query: queryOptions} = options ?? {};
+  const queryKey =
+    queryOptions?.queryKey ?? getGetCustomerSubscriptionQueryKey(customerId);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetCustomerSubscriptionQueryKey(customerId);
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getCustomerSubscription>>
+  > = ({ signal }) => getCustomerSubscription(customerId, signal);
 
-  
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!customerId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getCustomerSubscription>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCustomerSubscription>>> = ({ signal }) => getCustomerSubscription(customerId, signal);
+export type GetCustomerSubscriptionQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCustomerSubscription>>
+>;
+export type GetCustomerSubscriptionQueryError =
+  | ErrorResponse
+  | InternalServerErrorResponse;
 
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(customerId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCustomerSubscription>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
-}
-
-export type GetCustomerSubscriptionQueryResult = NonNullable<Awaited<ReturnType<typeof getCustomerSubscription>>>
-export type GetCustomerSubscriptionQueryError = ErrorResponse | InternalServerErrorResponse
-
-
-export function useGetCustomerSubscription<TData = Awaited<ReturnType<typeof getCustomerSubscription>>, TError = ErrorResponse | InternalServerErrorResponse>(
- customerId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerSubscription>>, TError, TData>> & Pick<
+export function useGetCustomerSubscription<
+  TData = Awaited<ReturnType<typeof getCustomerSubscription>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  customerId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCustomerSubscription>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getCustomerSubscription>>,
           TError,
           Awaited<ReturnType<typeof getCustomerSubscription>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetCustomerSubscription<TData = Awaited<ReturnType<typeof getCustomerSubscription>>, TError = ErrorResponse | InternalServerErrorResponse>(
- customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerSubscription>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData>;
+};
+export function useGetCustomerSubscription<
+  TData = Awaited<ReturnType<typeof getCustomerSubscription>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  customerId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCustomerSubscription>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getCustomerSubscription>>,
           TError,
           Awaited<ReturnType<typeof getCustomerSubscription>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetCustomerSubscription<TData = Awaited<ReturnType<typeof getCustomerSubscription>>, TError = ErrorResponse | InternalServerErrorResponse>(
- customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerSubscription>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+export function useGetCustomerSubscription<
+  TData = Awaited<ReturnType<typeof getCustomerSubscription>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  customerId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCustomerSubscription>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 /**
  * @summary Obtener la suscripción más reciente de un cliente
  */
 
-export function useGetCustomerSubscription<TData = Awaited<ReturnType<typeof getCustomerSubscription>>, TError = ErrorResponse | InternalServerErrorResponse>(
- customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerSubscription>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+export function useGetCustomerSubscription<
+  TData = Awaited<ReturnType<typeof getCustomerSubscription>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  customerId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCustomerSubscription>>,
+        TError,
+        TData
+      >
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+  const queryOptions = getGetCustomerSubscriptionQueryOptions(
+    customerId,
+    options,
+  );
 
-  const queryOptions = getGetCustomerSubscriptionQueryOptions(customerId,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-

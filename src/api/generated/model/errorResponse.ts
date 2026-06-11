@@ -14,7 +14,7 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 
  * OpenAPI spec version: 1.0.0
  */
-import type { ErrorResponseError } from './errorResponseError';
+import type { ErrorResponseError } from "./errorResponseError";
 
 export interface ErrorResponse {
   /** Código HTTP */

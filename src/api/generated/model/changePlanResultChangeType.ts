@@ -20,11 +20,11 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 - `scheduled`: el cambio tomará efecto en effectiveDate; scheduledPlanId indica el plan pendiente.
 
  */
-export type ChangePlanResultChangeType = typeof ChangePlanResultChangeType[keyof typeof ChangePlanResultChangeType];
-
+export type ChangePlanResultChangeType =
+  (typeof ChangePlanResultChangeType)[keyof typeof ChangePlanResultChangeType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangePlanResultChangeType = {
-  immediate: 'immediate',
-  scheduled: 'scheduled',
+  immediate: "immediate",
+  scheduled: "scheduled",
 } as const;

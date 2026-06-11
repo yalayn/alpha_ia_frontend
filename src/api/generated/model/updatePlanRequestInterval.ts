@@ -18,11 +18,11 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 /**
  * Frecuencia de facturación. Bloqueado si el plan tiene suscripciones activas.
  */
-export type UpdatePlanRequestInterval = typeof UpdatePlanRequestInterval[keyof typeof UpdatePlanRequestInterval];
-
+export type UpdatePlanRequestInterval =
+  (typeof UpdatePlanRequestInterval)[keyof typeof UpdatePlanRequestInterval];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdatePlanRequestInterval = {
-  month: 'month',
-  year: 'year',
+  month: "month",
+  year: "year",
 } as const;

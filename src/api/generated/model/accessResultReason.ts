@@ -23,12 +23,13 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 
  * @nullable
  */
-export type AccessResultReason = typeof AccessResultReason[keyof typeof AccessResultReason] | null;
-
+export type AccessResultReason =
+  | (typeof AccessResultReason)[keyof typeof AccessResultReason]
+  | null;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AccessResultReason = {
-  no_active_subscription: 'no_active_subscription',
-  subscription_expired: 'subscription_expired',
-  feature_not_in_plan: 'feature_not_in_plan',
+  no_active_subscription: "no_active_subscription",
+  subscription_expired: "subscription_expired",
+  feature_not_in_plan: "feature_not_in_plan",
 } as const;

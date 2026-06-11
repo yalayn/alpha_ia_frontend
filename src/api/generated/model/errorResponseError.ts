@@ -18,22 +18,22 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 /**
  * Código de error en snake_case. Mapea 1:1 con excepciones de dominio.
  */
-export type ErrorResponseError = typeof ErrorResponseError[keyof typeof ErrorResponseError];
-
+export type ErrorResponseError =
+  (typeof ErrorResponseError)[keyof typeof ErrorResponseError];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ErrorResponseError = {
-  validation_error: 'validation_error',
-  plan_not_found: 'plan_not_found',
-  plan_already_exists: 'plan_already_exists',
-  subscription_not_found: 'subscription_not_found',
-  subscription_already_active: 'subscription_already_active',
-  subscription_already_canceled: 'subscription_already_canceled',
-  subscription_not_active: 'subscription_not_active',
-  same_plan_change: 'same_plan_change',
-  payment_processing_failed: 'payment_processing_failed',
-  plan_has_active_subscriptions: 'plan_has_active_subscriptions',
-  plan_interval_locked: 'plan_interval_locked',
-  service_unavailable: 'service_unavailable',
-  internal_server_error: 'internal_server_error',
+  validation_error: "validation_error",
+  plan_not_found: "plan_not_found",
+  plan_already_exists: "plan_already_exists",
+  subscription_not_found: "subscription_not_found",
+  subscription_already_active: "subscription_already_active",
+  subscription_already_canceled: "subscription_already_canceled",
+  subscription_not_active: "subscription_not_active",
+  same_plan_change: "same_plan_change",
+  payment_processing_failed: "payment_processing_failed",
+  plan_has_active_subscriptions: "plan_has_active_subscriptions",
+  plan_interval_locked: "plan_interval_locked",
+  service_unavailable: "service_unavailable",
+  internal_server_error: "internal_server_error",
 } as const;

@@ -14,8 +14,8 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 
  * OpenAPI spec version: 1.0.0
  */
-import type { AccessResultReason } from './accessResultReason';
-import type { AccessResultSubscriptionStatus } from './accessResultSubscriptionStatus';
+import type { AccessResultReason } from "./accessResultReason";
+import type { AccessResultSubscriptionStatus } from "./accessResultSubscriptionStatus";
 
 export interface AccessResult {
   /** true si el cliente tiene acceso a la funcionalidad */

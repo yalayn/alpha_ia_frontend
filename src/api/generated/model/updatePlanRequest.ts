@@ -14,7 +14,7 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 
  * OpenAPI spec version: 1.0.0
  */
-import type { UpdatePlanRequestInterval } from './updatePlanRequestInterval';
+import type { UpdatePlanRequestInterval } from "./updatePlanRequestInterval";
 
 /**
  * Actualización parcial de un plan. Solo los campos presentes se modifican.

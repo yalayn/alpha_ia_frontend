@@ -19,13 +19,14 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
  * Estado actual de la suscripción del cliente. null si no existe.
  * @nullable
  */
-export type AccessResultSubscriptionStatus = typeof AccessResultSubscriptionStatus[keyof typeof AccessResultSubscriptionStatus] | null;
-
+export type AccessResultSubscriptionStatus =
+  | (typeof AccessResultSubscriptionStatus)[keyof typeof AccessResultSubscriptionStatus]
+  | null;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const AccessResultSubscriptionStatus = {
-  active: 'active',
-  inactive: 'inactive',
-  canceled: 'canceled',
-  expired: 'expired',
+  active: "active",
+  inactive: "inactive",
+  canceled: "canceled",
+  expired: "expired",
 } as const;

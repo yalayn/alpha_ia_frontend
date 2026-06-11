@@ -14,10 +14,7 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
 
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -30,8 +27,8 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
+  UseQueryResult,
+} from "@tanstack/react-query";
 
 import type {
   CreatePlanRequest,
@@ -39,13 +36,10 @@ import type {
   InternalServerErrorResponse,
   ListPlans200,
   Plan,
-  UpdatePlanRequest
-} from '.././model';
+  UpdatePlanRequest,
+} from ".././model";
 
-import { customInstance } from '../../client';
-
-
-
+import { customInstance } from "../../client";
 
 /**
  * Crea un plan agnóstico al proveedor de pagos. El plan define el precio,
@@ -55,372 +49,513 @@ otorga a los suscriptores.
  * @summary Crear un nuevo plan de suscripción
  */
 export const createPlan = (
-    createPlanRequest: CreatePlanRequest,
- signal?: AbortSignal
+  createPlanRequest: CreatePlanRequest,
+  signal?: AbortSignal,
 ) => {
-      
-      
-      return customInstance<Plan>(
-      {url: `/plans`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: createPlanRequest, signal
-    },
-      );
-    }
-  
+  return customInstance<Plan>({
+    url: `/plans`,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    data: createPlanRequest,
+    signal,
+  });
+};
 
+export const getCreatePlanMutationOptions = <
+  TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createPlan>>,
+    TError,
+    { data: CreatePlanRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createPlan>>,
+  TError,
+  { data: CreatePlanRequest },
+  TContext
+> => {
+  const mutationKey = ["createPlan"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
 
-export const getCreatePlanMutationOptions = <TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPlan>>, TError,{data: CreatePlanRequest}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof createPlan>>, TError,{data: CreatePlanRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createPlan>>,
+    { data: CreatePlanRequest }
+  > = (props) => {
+    const { data } = props ?? {};
 
-const mutationKey = ['createPlan'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
+    return createPlan(data);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type CreatePlanMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createPlan>>
+>;
+export type CreatePlanMutationBody = CreatePlanRequest;
+export type CreatePlanMutationError =
+  | ErrorResponse
+  | ErrorResponse
+  | InternalServerErrorResponse;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPlan>>, {data: CreatePlanRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  createPlan(data,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreatePlanMutationResult = NonNullable<Awaited<ReturnType<typeof createPlan>>>
-    export type CreatePlanMutationBody = CreatePlanRequest
-    export type CreatePlanMutationError = ErrorResponse | ErrorResponse | InternalServerErrorResponse
-
-    /**
+/**
  * @summary Crear un nuevo plan de suscripción
  */
-export const useCreatePlan = <TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPlan>>, TError,{data: CreatePlanRequest}, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createPlan>>,
-        TError,
-        {data: CreatePlanRequest},
-        TContext
-      > => {
+export const useCreatePlan = <
+  TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof createPlan>>,
+      TError,
+      { data: CreatePlanRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof createPlan>>,
+  TError,
+  { data: CreatePlanRequest },
+  TContext
+> => {
+  const mutationOptions = getCreatePlanMutationOptions(options);
 
-      const mutationOptions = getCreatePlanMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * Retorna todos los planes activos disponibles para suscripción.
  * @summary Listar todos los planes disponibles
  */
-export const listPlans = (
-    
- signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<ListPlans200>(
-      {url: `/plans`, method: 'GET', signal
-    },
-      );
-    }
-  
-
-
+export const listPlans = (signal?: AbortSignal) => {
+  return customInstance<ListPlans200>({ url: `/plans`, method: "GET", signal });
+};
 
 export const getListPlansQueryKey = () => {
-    return [
-    `/plans`
-    ] as const;
-    }
+  return [`/plans`] as const;
+};
 
-    
-export const getListPlansQueryOptions = <TData = Awaited<ReturnType<typeof listPlans>>, TError = InternalServerErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>>, }
-) => {
+export const getListPlansQueryOptions = <
+  TData = Awaited<ReturnType<typeof listPlans>>,
+  TError = InternalServerErrorResponse,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>
+  >;
+}) => {
+  const { query: queryOptions } = options ?? {};
 
-const {query: queryOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getListPlansQueryKey();
 
-  const queryKey =  queryOptions?.queryKey ?? getListPlansQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listPlans>>> = ({
+    signal,
+  }) => listPlans(signal);
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listPlans>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPlans>>> = ({ signal }) => listPlans(signal);
+export type ListPlansQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listPlans>>
+>;
+export type ListPlansQueryError = InternalServerErrorResponse;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
-}
-
-export type ListPlansQueryResult = NonNullable<Awaited<ReturnType<typeof listPlans>>>
-export type ListPlansQueryError = InternalServerErrorResponse
-
-
-export function useListPlans<TData = Awaited<ReturnType<typeof listPlans>>, TError = InternalServerErrorResponse>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>> & Pick<
+export function useListPlans<
+  TData = Awaited<ReturnType<typeof listPlans>>,
+  TError = InternalServerErrorResponse,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof listPlans>>,
           TError,
           Awaited<ReturnType<typeof listPlans>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useListPlans<TData = Awaited<ReturnType<typeof listPlans>>, TError = InternalServerErrorResponse>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData>;
+};
+export function useListPlans<
+  TData = Awaited<ReturnType<typeof listPlans>>,
+  TError = InternalServerErrorResponse,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof listPlans>>,
           TError,
           Awaited<ReturnType<typeof listPlans>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useListPlans<TData = Awaited<ReturnType<typeof listPlans>>, TError = InternalServerErrorResponse>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+export function useListPlans<
+  TData = Awaited<ReturnType<typeof listPlans>>,
+  TError = InternalServerErrorResponse,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 /**
  * @summary Listar todos los planes disponibles
  */
 
-export function useListPlans<TData = Awaited<ReturnType<typeof listPlans>>, TError = InternalServerErrorResponse>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+export function useListPlans<
+  TData = Awaited<ReturnType<typeof listPlans>>,
+  TError = InternalServerErrorResponse,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+  const queryOptions = getListPlansQueryOptions(options);
 
-  const queryOptions = getListPlansQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
 
-
-
 /**
  * @summary Obtener un plan por ID
  */
-export const getPlanById = (
-    planId: string,
- signal?: AbortSignal
+export const getPlanById = (planId: string, signal?: AbortSignal) => {
+  return customInstance<Plan>({
+    url: `/plans/${planId}`,
+    method: "GET",
+    signal,
+  });
+};
+
+export const getGetPlanByIdQueryKey = (planId?: string) => {
+  return [`/plans/${planId}`] as const;
+};
+
+export const getGetPlanByIdQueryOptions = <
+  TData = Awaited<ReturnType<typeof getPlanById>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  planId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getPlanById>>, TError, TData>
+    >;
+  },
 ) => {
-      
-      
-      return customInstance<Plan>(
-      {url: `/plans/${planId}`, method: 'GET', signal
-    },
-      );
-    }
-  
+  const { query: queryOptions } = options ?? {};
 
+  const queryKey = queryOptions?.queryKey ?? getGetPlanByIdQueryKey(planId);
 
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlanById>>> = ({
+    signal,
+  }) => getPlanById(planId, signal);
 
-export const getGetPlanByIdQueryKey = (planId?: string,) => {
-    return [
-    `/plans/${planId}`
-    ] as const;
-    }
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!planId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof getPlanById>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData> };
+};
 
-    
-export const getGetPlanByIdQueryOptions = <TData = Awaited<ReturnType<typeof getPlanById>>, TError = ErrorResponse | InternalServerErrorResponse>(planId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlanById>>, TError, TData>>, }
-) => {
+export type GetPlanByIdQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getPlanById>>
+>;
+export type GetPlanByIdQueryError = ErrorResponse | InternalServerErrorResponse;
 
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetPlanByIdQueryKey(planId);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlanById>>> = ({ signal }) => getPlanById(planId, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(planId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPlanById>>, TError, TData> & { queryKey: DataTag<QueryKey, TData> }
-}
-
-export type GetPlanByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getPlanById>>>
-export type GetPlanByIdQueryError = ErrorResponse | InternalServerErrorResponse
-
-
-export function useGetPlanById<TData = Awaited<ReturnType<typeof getPlanById>>, TError = ErrorResponse | InternalServerErrorResponse>(
- planId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlanById>>, TError, TData>> & Pick<
+export function useGetPlanById<
+  TData = Awaited<ReturnType<typeof getPlanById>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  planId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getPlanById>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPlanById>>,
           TError,
           Awaited<ReturnType<typeof getPlanById>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetPlanById<TData = Awaited<ReturnType<typeof getPlanById>>, TError = ErrorResponse | InternalServerErrorResponse>(
- planId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlanById>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData>;
+};
+export function useGetPlanById<
+  TData = Awaited<ReturnType<typeof getPlanById>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  planId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getPlanById>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getPlanById>>,
           TError,
           Awaited<ReturnType<typeof getPlanById>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
-export function useGetPlanById<TData = Awaited<ReturnType<typeof getPlanById>>, TError = ErrorResponse | InternalServerErrorResponse>(
- planId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlanById>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> }
+        >,
+        "initialData"
+      >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
+export function useGetPlanById<
+  TData = Awaited<ReturnType<typeof getPlanById>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  planId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getPlanById>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
 /**
  * @summary Obtener un plan por ID
  */
 
-export function useGetPlanById<TData = Awaited<ReturnType<typeof getPlanById>>, TError = ErrorResponse | InternalServerErrorResponse>(
- planId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlanById>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+export function useGetPlanById<
+  TData = Awaited<ReturnType<typeof getPlanById>>,
+  TError = ErrorResponse | InternalServerErrorResponse,
+>(
+  planId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getPlanById>>, TError, TData>
+    >;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> } {
+  const queryOptions = getGetPlanByIdQueryOptions(planId, options);
 
-  const queryOptions = getGetPlanByIdQueryOptions(planId,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData> };
 
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
 
 /**
  * @summary Editar un plan existente (actualización parcial)
  */
 export const updatePlan = (
-    planId: string,
-    updatePlanRequest: UpdatePlanRequest,
- ) => {
-      
-      
-      return customInstance<Plan>(
-      {url: `/plans/${planId}`, method: 'PATCH',
-      headers: {'Content-Type': 'application/json', },
-      data: updatePlanRequest
-    },
-      );
-    }
-  
+  planId: string,
+  updatePlanRequest: UpdatePlanRequest,
+) => {
+  return customInstance<Plan>({
+    url: `/plans/${planId}`,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    data: updatePlanRequest,
+  });
+};
 
+export const getUpdatePlanMutationOptions = <
+  TError =
+    | ErrorResponse
+    | ErrorResponse
+    | ErrorResponse
+    | InternalServerErrorResponse,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updatePlan>>,
+    TError,
+    { planId: string; data: UpdatePlanRequest },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updatePlan>>,
+  TError,
+  { planId: string; data: UpdatePlanRequest },
+  TContext
+> => {
+  const mutationKey = ["updatePlan"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
 
-export const getUpdatePlanMutationOptions = <TError = ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePlan>>, TError,{planId: string;data: UpdatePlanRequest}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof updatePlan>>, TError,{planId: string;data: UpdatePlanRequest}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updatePlan>>,
+    { planId: string; data: UpdatePlanRequest }
+  > = (props) => {
+    const { planId, data } = props ?? {};
 
-const mutationKey = ['updatePlan'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
+    return updatePlan(planId, data);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type UpdatePlanMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updatePlan>>
+>;
+export type UpdatePlanMutationBody = UpdatePlanRequest;
+export type UpdatePlanMutationError =
+  | ErrorResponse
+  | ErrorResponse
+  | ErrorResponse
+  | InternalServerErrorResponse;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePlan>>, {planId: string;data: UpdatePlanRequest}> = (props) => {
-          const {planId,data} = props ?? {};
-
-          return  updatePlan(planId,data,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type UpdatePlanMutationResult = NonNullable<Awaited<ReturnType<typeof updatePlan>>>
-    export type UpdatePlanMutationBody = UpdatePlanRequest
-    export type UpdatePlanMutationError = ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse
-
-    /**
+/**
  * @summary Editar un plan existente (actualización parcial)
  */
-export const useUpdatePlan = <TError = ErrorResponse | ErrorResponse | ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePlan>>, TError,{planId: string;data: UpdatePlanRequest}, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof updatePlan>>,
-        TError,
-        {planId: string;data: UpdatePlanRequest},
-        TContext
-      > => {
+export const useUpdatePlan = <
+  TError =
+    | ErrorResponse
+    | ErrorResponse
+    | ErrorResponse
+    | InternalServerErrorResponse,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof updatePlan>>,
+      TError,
+      { planId: string; data: UpdatePlanRequest },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof updatePlan>>,
+  TError,
+  { planId: string; data: UpdatePlanRequest },
+  TContext
+> => {
+  const mutationOptions = getUpdatePlanMutationOptions(options);
 
-      const mutationOptions = getUpdatePlanMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    /**
+  return useMutation(mutationOptions, queryClient);
+};
+/**
  * @summary Eliminar un plan sin suscripciones activas
  */
-export const deletePlan = (
-    planId: string,
- ) => {
-      
-      
-      return customInstance<Plan>(
-      {url: `/plans/${planId}`, method: 'DELETE'
-    },
-      );
-    }
-  
+export const deletePlan = (planId: string) => {
+  return customInstance<Plan>({ url: `/plans/${planId}`, method: "DELETE" });
+};
 
+export const getDeletePlanMutationOptions = <
+  TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deletePlan>>,
+    TError,
+    { planId: string },
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deletePlan>>,
+  TError,
+  { planId: string },
+  TContext
+> => {
+  const mutationKey = ["deletePlan"];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
 
-export const getDeletePlanMutationOptions = <TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePlan>>, TError,{planId: string}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof deletePlan>>, TError,{planId: string}, TContext> => {
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deletePlan>>,
+    { planId: string }
+  > = (props) => {
+    const { planId } = props ?? {};
 
-const mutationKey = ['deletePlan'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
+    return deletePlan(planId);
+  };
 
-      
+  return { mutationFn, ...mutationOptions };
+};
 
+export type DeletePlanMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deletePlan>>
+>;
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deletePlan>>, {planId: string}> = (props) => {
-          const {planId} = props ?? {};
+export type DeletePlanMutationError =
+  | ErrorResponse
+  | ErrorResponse
+  | InternalServerErrorResponse;
 
-          return  deletePlan(planId,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type DeletePlanMutationResult = NonNullable<Awaited<ReturnType<typeof deletePlan>>>
-    
-    export type DeletePlanMutationError = ErrorResponse | ErrorResponse | InternalServerErrorResponse
-
-    /**
+/**
  * @summary Eliminar un plan sin suscripciones activas
  */
-export const useDeletePlan = <TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePlan>>, TError,{planId: string}, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof deletePlan>>,
-        TError,
-        {planId: string},
-        TContext
-      > => {
+export const useDeletePlan = <
+  TError = ErrorResponse | ErrorResponse | InternalServerErrorResponse,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof deletePlan>>,
+      TError,
+      { planId: string },
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof deletePlan>>,
+  TError,
+  { planId: string },
+  TContext
+> => {
+  const mutationOptions = getDeletePlanMutationOptions(options);
 
-      const mutationOptions = getDeletePlanMutationOptions(options);
-
-      return useMutation(mutationOptions, queryClient);
-    }
-    
+  return useMutation(mutationOptions, queryClient);
+};

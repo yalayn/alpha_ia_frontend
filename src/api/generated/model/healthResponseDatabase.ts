@@ -15,11 +15,11 @@ snake_case y se mapean 1:1 con las excepciones de dominio.
  * OpenAPI spec version: 1.0.0
  */
 
-export type HealthResponseDatabase = typeof HealthResponseDatabase[keyof typeof HealthResponseDatabase];
-
+export type HealthResponseDatabase =
+  (typeof HealthResponseDatabase)[keyof typeof HealthResponseDatabase];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const HealthResponseDatabase = {
-  connected: 'connected',
-  disconnected: 'disconnected',
+  connected: "connected",
+  disconnected: "disconnected",
 } as const;
