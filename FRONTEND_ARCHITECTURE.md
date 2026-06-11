@@ -17,11 +17,11 @@ Un desarrollador nuevo debe poder identificar qué hace la aplicación leyendo s
 
 **Stack:** React · Vite · TypeScript strict · TanStack Query · Orval · Tailwind CSS · Zustand (condicional — ver sección 8) · Storybook · React Hook Form + Zod
 
-**Fuente de verdad del contrato API:** Repositorio del backend (`alpha_ia`) en GitHub.
-El cliente HTTP y los hooks de TanStack Query se **generan automáticamente** desde el OpenAPI publicado en:
-`https://raw.githubusercontent.com/yalayn/alpha_ia/main/docs/openapi.yaml`
+**Fuente de verdad del contrato API:** Repositorio de especificaciones (`alpha_spec`).
+El cliente HTTP y los hooks de TanStack Query se **generan automáticamente** desde el OpenAPI en:
+`../alpha_spec/docs/openapi.yaml` — ruta local relativa (los tres repos conviven bajo `project_alpha/`).
 Ningún tipo de API ni función de fetching se escribe a mano.
-No se mantiene una copia local del OpenAPI — Orval lo consume directamente desde el repositorio del backend.
+El backend (`alpha_backend`) sincroniza su copia local gitignored desde el mismo contrato con `npm run sync-api`.
 
 ---
 
@@ -31,7 +31,7 @@ No se mantiene una copia local del OpenAPI — Orval lo consume directamente des
 Todo lo relacionado a una funcionalidad de negocio vive junto: componentes, hooks de estado local, lógica de transformación, y tipos propios de esa feature. Las carpetas se organizan por **qué hace** la aplicación, no por **qué tipo de archivo** es.
 
 ### 2.2 El OpenAPI es la única fuente de tipos de API
-Los tipos que vienen del backend no se escriben a mano. Se generan con Orval desde el OpenAPI del repositorio `alpha_ia` en GitHub. Si un tipo no existe en el OpenAPI del backend, no existe en el frontend.
+Los tipos que vienen del backend no se escriben a mano. Se generan con Orval desde el OpenAPI de `alpha_spec` (`../alpha_spec/docs/openapi.yaml`). Si un tipo no existe en el OpenAPI, no existe en el frontend.
 
 ### 2.3 TanStack Query gestiona el estado asíncrono
 El 90% del estado de la aplicación es estado del servidor (datos que vienen de la API). TanStack Query lo gestiona: cache, loading, error, refetch. No se crean stores globales (Zustand, Redux, Context) para datos que vienen de la API.
@@ -42,6 +42,22 @@ Los componentes en `shared/` son **stateless**. Reciben props, renderizan UI. No
 ### 2.5 Zustand es la herramienta designada para estado de UI global complejo
 Zustand **no se instala por defecto**. Se incorpora únicamente cuando aparece estado de UI que se comparte entre features y que TanStack Query o Context no resuelven bien (ej: notificaciones toast globales, wizard multi-step que persiste entre rutas, estado de un carrito). Cuando ese caso exista, Zustand es la herramienta elegida — no Redux, no Jotai, no un Context gigante. La decisión de incorporarlo debe quedar documentada en este archivo.
 
+### 2.6 Los componentes de feature no tienen estilos de presentación propios
+Los componentes de `features/` **no escriben estilos visuales directamente**. No usan clases de Tailwind que definan colores, tipografía, bordes, sombras ni radios. Toda decisión de apariencia se delega a los componentes atómicos y moleculares de `shared/`.
+
+```typescript
+// ✅ correcto — la feature consume componentes shared que encapsulan el estilo
+import { Card, Button, Badge } from '@/shared';
+return <Card><Badge variant="success">Activo</Badge><Button variant="primary">Editar</Button></Card>;
+
+// ❌ incorrecto — la feature escribe estilos visuales propios
+return <div className="bg-white rounded-lg shadow p-6 border border-gray-200">...</div>;
+```
+
+**Razón:** Esta regla es lo que hace posible una renovación visual completa (Nivel 3) regenerando solo la capa `shared/` — sin tocar ninguna feature. Si las features tienen estilos propios, una renovación de diseño requiere editar toda la aplicación.
+
+**Excepción permitida:** Clases de Tailwind estructurales y de layout son aceptables en features — `flex`, `grid`, `gap-*`, `space-*`, `p-*`/`m-*`, `w-full`, `max-w-*`, `overflow-hidden`, `col-span-*`. El layout interno de una página (disposición y espaciado entre bloques) es responsabilidad de la feature. Lo que no está permitido es cualquier clase que defina apariencia: **colores, tipografía, bordes, sombras o radios**.
+
 ---
 
 ## 3. Estructura de Directorios
@@ -51,9 +67,9 @@ frontend/
 ├── src/
 │   ├── api/                           # ← GENERADO AUTOMÁTICAMENTE. No editar manualmente.
 │   │   ├── generated/
-│   │   │   ├── model/                 # Path alias: @/api/model — tipos e interfaces
+│   │   │   ├── model/                 # Tipos e interfaces — importar desde @/api/generated/model
 │   │   │   │   └── {entity}.ts
-│   │   │   └── {entity}.hooks.ts      # Hooks TanStack Query por operación
+│   │   │   └── {tag}/{tag}.ts         # Hooks TanStack Query por tag del OpenAPI (modo tags-split)
 │   │   └── client.ts                  # Configuración base de axios (único archivo editable)
 │   │
 │   ├── features/                      # Funcionalidades de negocio
@@ -97,8 +113,8 @@ frontend/
 ├── vite.config.ts
 └── package.json
                                        # Nota: NO hay docs/openapi.yaml en este repo.
-                                       # El OpenAPI vive en alpha_ia (backend) y Orval lo
-                                       # consume directamente desde GitHub.
+                                       # El OpenAPI vive en alpha_spec y Orval lo
+                                       # consume por ruta local relativa.
 ```
 
 ---
@@ -111,15 +127,15 @@ frontend/
 ### 4.1 Flujo de Generación
 
 ```
-https://raw.githubusercontent.com/yalayn/alpha_ia/main/docs/openapi.yaml
-      │  (repositorio del backend — fuente de verdad)
+../alpha_spec/docs/openapi.yaml
+      │  (repositorio de especificaciones — fuente de verdad)
       ▼ npm run generate-api
       │
-      ├── src/api/generated/{entity}.ts          ← interfaces y tipos
-      └── src/api/generated/{entity}.hooks.ts    ← hooks TanStack Query
+      ├── src/api/generated/model/{schema}.ts    ← interfaces y tipos
+      └── src/api/generated/{tag}/{tag}.ts       ← hooks TanStack Query por tag
 ```
 
-El comando `npm run generate-api` debe ejecutarse cada vez que el backend publique cambios en su `docs/openapi.yaml`. Orval descarga el spec directamente desde GitHub en cada ejecución — no se mantiene copia local. Es el paso 3 del flujo de orquestación del proyecto.
+El comando `npm run generate-api` debe ejecutarse cada vez que cambie el `openapi.yaml` en `alpha_spec`. Orval lee el spec por ruta local en cada ejecución. Es el paso 3 del flujo de orquestación del proyecto.
 
 ### 4.2 Convención de Hooks Generados
 
@@ -133,7 +149,7 @@ Orval genera hooks usando los `operationId` del OpenAPI como base:
 | `subscribeCustomer`      | `useSubscribeCustomer()`| `useMutation`       |
 | `validateAccess`         | `useValidateAccess()`   | `useMutation`       |
 
-**Regla:** Los `operationId` en el OpenAPI del backend (`alpha_ia`) son la única fuente que controla los nombres de los hooks. Si el nombre de un hook no es intuitivo, se corrige el `operationId` en el repositorio del backend, no el código generado.
+**Regla:** Los `operationId` del `openapi.yaml` en `alpha_spec` son la única fuente que controla los nombres de los hooks. Si el nombre de un hook no es intuitivo, se corrige el `operationId` en `alpha_spec/docs/openapi.yaml`, no el código generado.
 
 ### 4.3 Configuración de Orval
 
@@ -142,16 +158,15 @@ Orval genera hooks usando los `operationId` del OpenAPI como base:
 import { defineConfig } from 'orval';
 
 export default defineConfig({
-  projectAlpha: {
-    input: {
-      target: 'https://raw.githubusercontent.com/yalayn/alpha_ia/main/docs/openapi.yaml',
-    },
+  alphaSpec: {
+    input: '../alpha_spec/docs/openapi.yaml', // ← ruta local, sin red, sin token
     output: {
       mode: 'tags-split',
       target: './src/api/generated',
-      schemas: './src/api/generated/model',  // ← accesible como @/api/model
+      schemas: './src/api/generated/model',
       client: 'react-query',
       httpClient: 'axios',
+      prettier: true,
       override: {
         mutator: {
           path: './src/api/client.ts',
@@ -163,9 +178,9 @@ export default defineConfig({
 });
 ```
 
-El input apunta directamente al repositorio del backend en GitHub. No se requiere tener el repositorio `alpha_ia` clonado localmente para ejecutar la generación.
+El input apunta al `openapi.yaml` de `alpha_spec` por ruta relativa — requiere tener los tres repos clonados bajo el mismo directorio raíz (`project_alpha/`). La opción `prettier: true` garantiza que el código generado sale formateado en cada ejecución.
 
-El path alias `@/api/model` se configura en `vite.config.ts`:
+El path alias `@` se configura en `vite.config.ts`:
 
 ```typescript
 // vite.config.ts (extracto relevante)
@@ -176,13 +191,12 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      // @/api/model resuelve automáticamente como @/api/generated/model
     },
   },
 });
 ```
 
-**Regla de importación de tipos de API:** Los tipos del backend se importan **siempre** desde `@/api/model`. Nunca se escriben a mano ni se importan desde rutas internas de `generated/`. La fuente de verdad de esos tipos es el OpenAPI del backend — si necesita un cambio, se modifica en `alpha_ia`, no en el frontend.
+**Regla de importación de tipos de API:** Los tipos del backend se importan **siempre** desde `@/api/generated/model`. Nunca se escriben a mano. La fuente de verdad de esos tipos es el `openapi.yaml` de `alpha_spec` — si un tipo necesita un cambio, se modifica allí, no en el frontend.
 
 ### 4.4 Cliente HTTP Base
 
@@ -256,7 +270,7 @@ Nombrar con el patrón `{Feature}{Role}`:
 #### Gestión de Formularios
 - Todo formulario se implementa utilizando **React Hook Form**.
 - La validación del esquema se delega a **Zod**, utilizando `zodResolver`.
-- Los esquemas Zod deben derivarse idealmente de los tipos generados por Orval (`@/api/model`) para garantizar la consistencia con el contrato del backend.
+- Los esquemas Zod deben derivarse idealmente de los tipos generados por Orval (`@/api/generated/model`) para garantizar la consistencia con el contrato del backend.
 
 ### 5.3 Hooks de Feature
 
@@ -513,7 +527,7 @@ const { mutate, isPending } = use{Operation}({
 
 ## 10. Mapeo OpenAPI → Frontend
 
-Cada `operationId` del contrato en el OpenAPI de `alpha_ia` tiene un mapeo exacto en el frontend:
+Cada `operationId` del contrato en el `openapi.yaml` de `alpha_spec` tiene un mapeo exacto en el frontend:
 
 | `operationId`       | Hook generado            | Feature que lo consume          |
 |---------------------|--------------------------|---------------------------------|
@@ -523,7 +537,7 @@ Cada `operationId` del contrato en el OpenAPI de `alpha_ia` tiene un mapeo exact
 | `validateAccess`    | `useValidateAccess()`    | `features/access-control/`      |
 | `getHealth`         | `useGetHealth()`         | `features/dashboard/` o `core/` |
 
-> Agregar un endpoint al OpenAPI del backend sin ejecutar `npm run generate-api` en el frontend y consumirlo en la feature correspondiente **no está permitido**.
+> Agregar un endpoint al `openapi.yaml` de `alpha_spec` sin ejecutar `npm run generate-api` en el frontend y consumirlo en la feature correspondiente **no está permitido**.
 
 ---
 
@@ -546,7 +560,7 @@ TanStack Query captura los errores de red y HTTP automáticamente. El manejo se 
 
 ### 11.2 Formato de Error del Backend
 
-Los errores del backend siguen el formato definido en el OpenAPI de `alpha_ia` (schema `ErrorResponse`):
+Los errores del backend siguen el formato definido en el `openapi.yaml` de `alpha_spec` (schema `ErrorResponse`):
 
 ```typescript
 // Tipo generado automáticamente por Orval
@@ -639,14 +653,15 @@ Seguir [Conventional Commits](https://www.conventionalcommits.org/):
 Antes de aprobar cualquier Pull Request, verificar:
 
 - [ ] No existe ningún tipo de API escrito a mano en `src/` fuera de `src/api/generated/`
-- [ ] Los tipos de API se importan desde `@/api/model`, nunca desde rutas internas de `generated/`
+- [ ] Los tipos de API se importan desde `@/api/generated/model`, nunca se escriben a mano
 - [ ] Ningún archivo dentro de `src/api/generated/` fue editado manualmente
 - [ ] Los hooks de TanStack Query se usan para todo dato que viene de la API
 - [ ] Ningún componente de `shared/` importa de `features/`
 - [ ] Ninguna feature importa directamente de otra feature
+- [ ] Ningún componente de `features/` usa clases de Tailwind de apariencia (colores, tipografía, bordes, sombras, radios) — solo consume componentes de `shared/`; las clases estructurales de layout y espaciado (`flex`, `grid`, `gap-*`, `space-*`, `p-*`/`m-*`, `w-full`, `max-w-*`) están permitidas
 - [ ] Las variables de entorno se acceden solo a través de `core/config/env.ts`
 - [ ] Los barrel exports (`index.ts`) están actualizados en la feature modificada
-- [ ] El `operationId` nuevo en el OpenAPI (en `alpha_ia`) tiene su hook generado y consumido
+- [ ] El `operationId` nuevo en el OpenAPI (en `alpha_spec`) tiene su hook generado y consumido
 - [ ] La nomenclatura sigue las convenciones de la sección 9
-- [ ] `npm run generate-api` se ejecutó después del último cambio en el OpenAPI del backend
+- [ ] `npm run generate-api` se ejecutó después del último cambio en el `openapi.yaml` de `alpha_spec`
 - [ ] Si se agregó `store/` a una feature, el caso está justificado según sección 2.5 y 8.2
