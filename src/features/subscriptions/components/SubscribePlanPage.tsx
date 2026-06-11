@@ -4,7 +4,10 @@ import { useListPlans } from '@/api/generated/admin/admin';
 import { useSubscribeCustomer } from '@/api/generated/subscriptions/subscriptions';
 import type { Plan } from '@/api/generated/model';
 import { useAuthContext } from '@/core/auth/auth.context';
-import { Card, Button, Input, ErrorMessage, Modal } from '@/shared';
+import {
+  Card, Button, Input, ErrorMessage, Modal, PageHeader,
+  Heading, Text, CheckList, EmptyState,
+} from '@/shared';
 import { SubscriptionSkeleton } from './SubscriptionSkeleton';
 import { formatDate } from '../utils/subscriptions.utils';
 
@@ -75,36 +78,30 @@ export function SubscribePlanPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-2">Elige tu plan</h1>
-      <p className="text-gray-500 mb-8 text-sm">
-        Selecciona el plan que mejor se adapte a las necesidades de tu empresa.
-      </p>
+      <PageHeader
+        title="Elige tu plan"
+        description="Selecciona el plan que mejor se adapte a las necesidades de tu empresa."
+      />
 
       {plans.length === 0 ? (
-        <p className="text-center text-gray-500 py-16">No hay planes disponibles en este momento.</p>
+        <EmptyState
+          title="Aún no hay planes disponibles"
+          description="Vuelve a intentarlo más tarde."
+        />
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan) => (
             <Card key={plan.id} className="flex flex-col p-6">
-              <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
+              <Heading size="lg" as="h3">{plan.name}</Heading>
               <p className="mt-2">
-                <span className="text-3xl font-bold text-gray-900">
+                <Heading size="3xl" as="span">
                   {plan.currency} {plan.price}
-                </span>
-                <span className="text-sm text-gray-500">
+                </Heading>
+                <Text as="span" variant="secondary">
                   /{plan.interval === 'month' ? 'mes' : 'año'}
-                </span>
+                </Text>
               </p>
-              <ul className="mt-4 flex-1 space-y-2 text-sm text-gray-600">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <svg className="h-4 w-4 flex-none text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
-                    </svg>
-                    {f}
-                  </li>
-                ))}
-              </ul>
+              <CheckList items={plan.features} className="mt-4 flex-1" />
               <Button className="mt-6 w-full" onClick={() => setSelectedPlan(plan)}>
                 Suscribirse
               </Button>
@@ -116,23 +113,23 @@ export function SubscribePlanPage() {
       <Modal isOpen={!!selectedPlan} onClose={handleClose} title="Confirmar suscripción">
         {selectedPlan && (
           <div className="space-y-4">
-            <div className="rounded-lg bg-gray-50 p-4 text-sm space-y-1 text-gray-700">
-              <p>
-                <span className="font-medium">Plan:</span> {selectedPlan.name}
-              </p>
-              <p>
-                <span className="font-medium">Precio:</span> {selectedPlan.currency} {selectedPlan.price}
+            <Card className="space-y-1 p-4 shadow-none">
+              <Text variant="secondary">
+                <Text as="span" variant="label">Plan:</Text> {selectedPlan.name}
+              </Text>
+              <Text variant="secondary">
+                <Text as="span" variant="label">Precio:</Text> {selectedPlan.currency} {selectedPlan.price}
                 /{selectedPlan.interval === 'month' ? 'mes' : 'año'}
-              </p>
-              <p>
-                <span className="font-medium">Próximo cobro:</span>{' '}
+              </Text>
+              <Text variant="secondary">
+                <Text as="span" variant="label">Próximo cobro:</Text>{' '}
                 {formatDate(nextBillingDate(selectedPlan.interval))}
-              </p>
-            </div>
+              </Text>
+            </Card>
 
             <Input
               label="ID de método de pago (Stripe)"
-              placeholder="pm_..."
+              placeholder="ej. pm_1NXk2v..."
               value={paymentMethodId}
               onChange={(e) => setPaymentMethodId(e.target.value)}
               helperText="Ingresa el ID de tu método de pago de Stripe (pm_...)."
@@ -140,7 +137,7 @@ export function SubscribePlanPage() {
               disabled={mutation.isPending}
             />
 
-            <div className="flex gap-3 justify-end pt-2">
+            <div className="flex justify-end gap-3 pt-2">
               <Button variant="ghost" onClick={handleClose} disabled={mutation.isPending}>
                 Cancelar
               </Button>

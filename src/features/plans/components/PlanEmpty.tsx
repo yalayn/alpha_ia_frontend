@@ -1,16 +1,18 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { PackageOpen } from 'lucide-react';
+import { EmptyState, Button } from '@/shared';
 
 export function PlanEmpty() {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 py-16 text-center">
-      <p className="text-sm font-medium text-gray-900">No hay planes disponibles</p>
-      <p className="mt-1 text-sm text-gray-500">Crea el primer plan de suscripción.</p>
-      <Link
-        to="/plans/new"
-        className="mt-4 inline-flex items-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
-      >
-        Crear plan
-      </Link>
-    </div>
+    <EmptyState
+      icon={PackageOpen}
+      title="Aún no tienes planes"
+      description="Crea el primer plan de suscripción."
+      action={
+        <Button onClick={() => navigate('/plans/new')}>Crear plan</Button>
+      }
+    />
   );
 }

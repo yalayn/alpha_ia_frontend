@@ -21,11 +21,12 @@ function getInitials(name: string) {
     .toUpperCase();
 }
 
+// radius-full permitido solo en avatares y toggles (DESIGN_SYSTEM.md §5)
 export function Avatar({ name, size = 'md', className }: AvatarProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center justify-center rounded-full bg-blue-100 font-medium text-blue-700',
+        'inline-flex items-center justify-center rounded-full bg-brand-100 font-medium text-brand-600',
         sizeStyles[size],
         className,
       )}

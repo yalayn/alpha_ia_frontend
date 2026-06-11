@@ -20,9 +20,10 @@ export interface CardFooterProps {
   children: React.ReactNode;
 }
 
+// DESIGN_SYSTEM.md §8.1
 export function Card({ className, children }: CardProps) {
   return (
-    <div className={cn('rounded-lg border border-gray-200 bg-white shadow-sm', className)}>
+    <div className={cn('rounded-lg border border-border bg-surface shadow-sm', className)}>
       {children}
     </div>
   );
@@ -30,7 +31,7 @@ export function Card({ className, children }: CardProps) {
 
 export function CardHeader({ className, children }: CardHeaderProps) {
   return (
-    <div className={cn('border-b border-gray-200 px-6 py-4', className)}>
+    <div className={cn('border-b border-border px-6 py-4', className)}>
       {children}
     </div>
   );
@@ -46,7 +47,7 @@ export function CardBody({ className, children }: CardBodyProps) {
 
 export function CardFooter({ className, children }: CardFooterProps) {
   return (
-    <div className={cn('border-t border-gray-200 px-6 py-4', className)}>
+    <div className={cn('border-t border-border px-6 py-4', className)}>
       {children}
     </div>
   );

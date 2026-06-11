@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Badge } from '@/shared';
+import { Card, CardBody, CardHeader, Badge, Heading, Text } from '@/shared';
 
 interface HealthStatusCardProps {
   status: 'ok' | 'degraded';
@@ -11,22 +11,22 @@ export function HealthStatusCard({ status, database, timestamp }: HealthStatusCa
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-gray-700">Estado del sistema</h2>
+          <Heading size="lg" as="h2">Estado del sistema</Heading>
           <Badge variant={status === 'ok' ? 'success' : 'warning'}>
             {status === 'ok' ? 'Operativo' : 'Degradado'}
           </Badge>
         </div>
       </CardHeader>
-      <CardBody className="space-y-2 text-sm text-gray-600">
+      <CardBody className="space-y-2">
         <div className="flex items-center justify-between">
-          <span>Base de datos</span>
-          <Badge variant={database === 'connected' ? 'success' : 'error'} size="sm">
+          <Text as="span" variant="secondary">Base de datos</Text>
+          <Badge variant={database === 'connected' ? 'success' : 'error'}>
             {database === 'connected' ? 'Conectada' : 'Desconectada'}
           </Badge>
         </div>
-        <p className="text-xs text-gray-400">
+        <Text variant="muted">
           Última verificación: {new Date(timestamp).toLocaleString('es-ES')}
-        </p>
+        </Text>
       </CardBody>
     </Card>
   );

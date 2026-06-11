@@ -1,0 +1,90 @@
+/**
+ * Design Tokens — materialización de alpha_spec/DESIGN_SYSTEM.md
+ * Fuente de verdad: DESIGN_SYSTEM.md. Este archivo solo transcribe los tokens.
+ * No agregar valores que no existan en la constitución visual.
+ */
+
+:root {
+  /* --- Fondo --- */
+  --color-bg-base:       #F8F9FA;
+  --color-bg-surface:    #FFFFFF;
+  --color-bg-subtle:     #F1F3F5;
+  --color-bg-muted:      #E9ECEF;
+
+  /* --- Texto --- */
+  --color-text-primary:  #1A1D23;
+  --color-text-secondary:#4B5563;
+  --color-text-muted:    #9CA3AF;
+  --color-text-inverse:  #FFFFFF;
+
+  /* --- Brand (Accent Principal) --- */
+  --color-brand-500:     #2563EB;
+  --color-brand-600:     #1D4ED8;
+  --color-brand-100:     #DBEAFE;
+  --color-brand-50:      #EFF6FF;
+
+  /* --- Borde --- */
+  --color-border:        #E5E7EB;
+  --color-border-focus:  #2563EB;
+
+  /* --- Feedback --- */
+  --color-success-500:   #16A34A;
+  --color-success-100:   #DCFCE7;
+  --color-warning-500:   #D97706;
+  --color-warning-100:   #FEF3C7;
+  --color-error-500:     #DC2626;
+  --color-error-100:     #FEE2E2;
+  --color-info-500:      #0891B2;
+  --color-info-100:      #CFFAFE;
+
+  /* --- Tipografía --- */
+  --font-sans:  'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
+
+  /* --- Sombras --- */
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:  0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -1px rgba(0,0,0,0.04);
+  --shadow-lg:  0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+  --shadow-xl:  0 20px 25px -5px rgba(0,0,0,0.10), 0 10px 10px -5px rgba(0,0,0,0.04);
+
+  /* --- Radios --- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+}
+
+[data-theme='dark'] {
+  /* --- Fondo --- */
+  --color-bg-base:       #0F1117;
+  --color-bg-surface:    #1A1D23;
+  --color-bg-subtle:     #22262F;
+  --color-bg-muted:      #2C313C;
+
+  /* --- Texto --- */
+  --color-text-primary:  #F1F3F5;
+  --color-text-secondary:#9CA3AF;
+  --color-text-muted:    #6B7280;
+  --color-text-inverse:  #1A1D23;
+
+  /* --- Brand --- */
+  --color-brand-500:     #3B82F6;
+  --color-brand-600:     #2563EB;
+  --color-brand-100:     #1E3A5F;
+  --color-brand-50:      #172B45;
+
+  /* --- Borde --- */
+  --color-border:        #2C313C;
+  --color-border-focus:  #3B82F6;
+
+  /* --- Feedback --- */
+  --color-success-500:   #22C55E;
+  --color-success-100:   #14532D;
+  --color-warning-500:   #F59E0B;
+  --color-warning-100:   #78350F;
+  --color-error-500:     #EF4444;
+  --color-error-100:     #7F1D1D;
+  --color-info-500:      #22D3EE;
+  --color-info-100:      #164E63;
+}

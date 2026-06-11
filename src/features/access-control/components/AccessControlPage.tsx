@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Card, CardBody, CardHeader, Input, Button } from '@/shared';
+import { Card, CardBody, CardHeader, Input, Button, Heading } from '@/shared';
 import { useAccessControl } from '../hooks/use-access-control';
 import { AccessResultCard } from './AccessResultCard';
 import type { AccessControlFormValues } from '../types/access-control.types';
@@ -18,10 +18,10 @@ export function AccessControlPage() {
   });
 
   return (
-    <div className="mx-auto max-w-xl px-4 py-8 space-y-6">
+    <div className="mx-auto max-w-xl space-y-6 px-4 py-8">
       <Card>
         <CardHeader>
-          <h1 className="text-xl font-bold text-gray-900">Validar acceso</h1>
+          <Heading size="xl">Validar acceso</Heading>
         </CardHeader>
         <CardBody>
           <form onSubmit={handleSubmit(validate)} className="space-y-4">

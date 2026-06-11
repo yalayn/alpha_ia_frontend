@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useListPlans } from '@/api/generated/admin/admin';
 import type { Plan } from '@/api/generated/model';
-import { Card, Button, Input, ErrorMessage, Modal } from '@/shared';
+import {
+  Card, Button, Input, ErrorMessage, Modal, PageHeader,
+  Heading, Text, CheckList, EmptyState, Skeleton,
+} from '@/shared';
 import { usePlanChange } from '../hooks/use-plan-change';
 import { ChangePlanSummary } from './ChangePlanSummary';
 
@@ -52,9 +55,9 @@ export function ChangePlanPage() {
   if (isLoading) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-8">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-56 animate-pulse rounded-xl bg-gray-100" />
+            <Skeleton key={i} className="h-56" />
           ))}
         </div>
       </div>
@@ -65,38 +68,30 @@ export function ChangePlanPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Cambiar plan</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Selecciona el plan al que deseas migrar tu suscripción.
-        </p>
-      </div>
+      <PageHeader
+        title="Cambiar plan"
+        description="Selecciona el plan al que deseas migrar tu suscripción."
+      />
 
       {plans.length === 0 ? (
-        <p className="py-16 text-center text-gray-500">No hay planes disponibles en este momento.</p>
+        <EmptyState
+          title="Aún no hay planes disponibles"
+          description="Vuelve a intentarlo más tarde."
+        />
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan) => (
             <Card key={plan.id} className="flex flex-col p-6">
-              <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
+              <Heading size="lg" as="h3">{plan.name}</Heading>
               <p className="mt-2">
-                <span className="text-3xl font-bold text-gray-900">
+                <Heading size="3xl" as="span">
                   {plan.currency} {plan.price}
-                </span>
-                <span className="text-sm text-gray-500">
+                </Heading>
+                <Text as="span" variant="secondary">
                   /{plan.interval === 'month' ? 'mes' : 'año'}
-                </span>
+                </Text>
               </p>
-              <ul className="mt-4 flex-1 space-y-2 text-sm text-gray-600">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <svg className="h-4 w-4 flex-none text-green-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
-                    </svg>
-                    {f}
-                  </li>
-                ))}
-              </ul>
+              <CheckList items={plan.features} className="mt-4 flex-1" />
               <Button className="mt-6 w-full" onClick={() => setSelectedPlan(plan)}>
                 Elegir este plan
               </Button>
@@ -119,24 +114,24 @@ export function ChangePlanPage() {
               </>
             ) : (
               <>
-                <div className="rounded-lg bg-gray-50 p-4 text-sm space-y-1 text-gray-700">
-                  <p>
-                    <span className="font-medium">Nuevo plan:</span> {selectedPlan.name}
-                  </p>
-                  <p>
-                    <span className="font-medium">Precio:</span> {selectedPlan.currency} {selectedPlan.price}
+                <Card className="space-y-1 p-4 shadow-none">
+                  <Text variant="secondary">
+                    <Text as="span" variant="label">Nuevo plan:</Text> {selectedPlan.name}
+                  </Text>
+                  <Text variant="secondary">
+                    <Text as="span" variant="label">Precio:</Text> {selectedPlan.currency} {selectedPlan.price}
                     /{selectedPlan.interval === 'month' ? 'mes' : 'año'}
-                  </p>
+                  </Text>
                   {selectedPlan.interval === 'month' && (
-                    <p className="text-xs text-amber-600">
+                    <Text variant="muted" tone="warning">
                       Si tu plan actual es anual, el cambio se programará para el final del período pagado.
-                    </p>
+                    </Text>
                   )}
-                </div>
+                </Card>
 
                 <Input
                   label="ID de método de pago (Stripe)"
-                  placeholder="pm_..."
+                  placeholder="ej. pm_1NXk2v..."
                   value={paymentMethodId}
                   onChange={(e) => setPaymentMethodId(e.target.value)}
                   helperText="Requerido. Solo se cobra si el cambio es inmediato."
@@ -144,7 +139,7 @@ export function ChangePlanPage() {
                   disabled={isPending}
                 />
 
-                <div className="flex gap-3 justify-end pt-2">
+                <div className="flex justify-end gap-3 pt-2">
                   <Button variant="ghost" onClick={handleClose} disabled={isPending}>
                     Cancelar
                   </Button>

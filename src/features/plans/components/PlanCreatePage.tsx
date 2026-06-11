@@ -1,5 +1,6 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Card, CardBody, CardHeader } from '@/shared';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import { Card, CardBody, CardHeader, Button, Heading } from '@/shared';
 import { usePlanCreate } from '../hooks/use-plans';
 import { PlanForm } from './PlanForm';
 import type { PlanFormValues } from '../types/plans.types';
@@ -15,15 +16,17 @@ export function PlanCreatePage() {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-8">
-      <Link
-        to="/plans"
-        className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 mb-6"
+      <Button
+        variant="ghost"
+        size="sm"
+        className="mb-6"
+        onClick={() => navigate('/plans')}
       >
-        ← Volver a Planes
-      </Link>
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Volver a Planes
+      </Button>
       <Card>
         <CardHeader>
-          <h1 className="text-xl font-bold text-gray-900">Nuevo plan</h1>
+          <Heading size="xl">Nuevo plan</Heading>
         </CardHeader>
         <CardBody>
           <PlanForm onSubmit={handleSubmit} isSubmitting={isPending} />

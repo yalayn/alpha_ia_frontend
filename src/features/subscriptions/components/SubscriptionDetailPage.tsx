@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardBody, CardHeader, CardFooter, Button, ErrorMessage } from '@/shared';
+import { Card, CardBody, CardHeader, CardFooter, Button, ErrorMessage, Heading, Text } from '@/shared';
 import { useSubscriptionDetail, useSubscriptionActions } from '../hooks/use-subscription';
 import { SubscriptionStatusBadge } from './SubscriptionStatusBadge';
 import { SubscriptionSkeleton } from './SubscriptionSkeleton';
@@ -20,16 +20,16 @@ export function SubscriptionDetailPage() {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold text-gray-900">Suscripción</h1>
+            <Heading size="xl">Suscripción</Heading>
             <SubscriptionStatusBadge status={subscription.status} />
           </div>
         </CardHeader>
-        <CardBody className="space-y-2 text-sm text-gray-600">
-          <p><span className="font-medium">ID:</span> {subscription.id}</p>
-          <p><span className="font-medium">Plan:</span> {subscription.planId}</p>
-          <p><span className="font-medium">Inicio:</span> {formatDate(subscription.startDate)}</p>
+        <CardBody className="space-y-2">
+          <Text variant="secondary"><Text as="span" variant="label">ID:</Text> {subscription.id}</Text>
+          <Text variant="secondary"><Text as="span" variant="label">Plan:</Text> {subscription.planId}</Text>
+          <Text variant="secondary"><Text as="span" variant="label">Inicio:</Text> {formatDate(subscription.startDate)}</Text>
           {subscription.endDate && (
-            <p><span className="font-medium">Fin:</span> {formatDate(subscription.endDate)}</p>
+            <Text variant="secondary"><Text as="span" variant="label">Fin:</Text> {formatDate(subscription.endDate)}</Text>
           )}
         </CardBody>
         {subscription.status === 'active' && (

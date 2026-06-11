@@ -1,6 +1,10 @@
 import { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Card, CardBody, CardHeader, ErrorMessage, Spinner, Button } from '@/shared';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import {
+  Card, CardBody, CardHeader, ErrorMessage, Spinner, Button, Modal,
+  Heading, Text, CheckList,
+} from '@/shared';
 import { useAuth } from '@/core/auth/use-auth';
 import { usePlanDetail, usePlanDelete } from '../hooks/use-plans';
 import { formatPlanPrice } from '../utils/plans.utils';
@@ -24,23 +28,25 @@ export function PlanDetailPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <Link
-        to="/plans"
-        className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 mb-6"
+      <Button
+        variant="ghost"
+        size="sm"
+        className="mb-6"
+        onClick={() => navigate('/plans')}
       >
-        ← Volver a Planes
-      </Link>
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Volver a Planes
+      </Button>
       <Card>
         <CardHeader>
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h1 className="text-xl font-bold text-gray-900">{plan.name}</h1>
-              <p className="text-2xl font-bold text-blue-600 mt-1">
+              <Heading size="xl">{plan.name}</Heading>
+              <Heading size="2xl" as="p" className="mt-1">
                 {formatPlanPrice(plan.price, plan.currency, plan.interval)}
-              </p>
+              </Heading>
             </div>
             {isAdmin && (
-              <div className="flex gap-2 flex-shrink-0">
+              <div className="flex flex-shrink-0 gap-2">
                 <Button
                   variant="secondary"
                   size="sm"
@@ -60,50 +66,45 @@ export function PlanDetailPage() {
           </div>
         </CardHeader>
         <CardBody>
-          <h2 className="text-sm font-medium text-gray-700 mb-2">Características incluidas</h2>
-          <ul className="space-y-1 text-sm text-gray-600">
-            {plan.features.map((f) => (
-              <li key={f} className="flex items-center gap-2">
-                <span className="text-green-500">✓</span> {f}
-              </li>
-            ))}
-          </ul>
+          <Text variant="label" className="mb-2">Características incluidas</Text>
+          <CheckList items={plan.features} />
           {deleteError && <ErrorMessage error={deleteError} className="mt-4" />}
         </CardBody>
       </Card>
 
-      {/* Modal de confirmación de eliminación */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
-            <h2 className="text-lg font-bold text-gray-900 mb-2">Eliminar plan</h2>
-            <p className="text-sm text-gray-600 mb-1">
-              ¿Estás seguro de que quieres eliminar <strong>{plan.name}</strong>?
-            </p>
-            <p className="text-sm text-red-600 mb-6">
-              Esta acción es irreversible y no puede deshacerse.
-            </p>
-            <div className="flex gap-3 justify-end">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowDeleteModal(false)}
-                disabled={isDeleting}
-              >
-                Cancelar
-              </Button>
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={handleDelete}
-                isLoading={isDeleting}
-              >
-                Sí, eliminar
-              </Button>
-            </div>
-          </div>
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title="Eliminar plan"
+        width="sm"
+      >
+        <div className="space-y-1">
+          <Text variant="secondary">
+            ¿Estás seguro de que quieres eliminar <strong>{plan.name}</strong>?
+          </Text>
+          <Text variant="secondary" tone="error">
+            Esta acción es irreversible y no puede deshacerse.
+          </Text>
         </div>
-      )}
+        <div className="mt-6 flex justify-end gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowDeleteModal(false)}
+            disabled={isDeleting}
+          >
+            Cancelar
+          </Button>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={handleDelete}
+            isLoading={isDeleting}
+          >
+            Eliminar plan
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

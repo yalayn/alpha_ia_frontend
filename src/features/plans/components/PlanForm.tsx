@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Button, Input } from '@/shared';
+import { X, Plus } from 'lucide-react';
+import { Button, Input, Select, Text } from '@/shared';
 import type { PlanFormValues } from '../types/plans.types';
 
 const planSchema = z.object({
@@ -65,39 +66,41 @@ export function PlanForm({
 
   return (
     <form onSubmit={handleSubmit(handleValid)} className="space-y-4">
-      <Input label="Nombre del plan" errorMessage={errors.name?.message} {...register('name')} />
+      <Input label="Nombre del plan" placeholder="ej. Plan Profesional" errorMessage={errors.name?.message} {...register('name')} />
       <div className="grid grid-cols-2 gap-4">
         <Input label="Precio" type="number" step="0.01" errorMessage={errors.price?.message} {...register('price')} />
-        <Input label="Moneda (ISO)" errorMessage={errors.currency?.message} {...register('currency')} />
+        <Input label="Moneda (ISO)" placeholder="ej. EUR" errorMessage={errors.currency?.message} {...register('currency')} />
       </div>
       <div>
-        <label className="text-sm font-medium text-gray-700">Intervalo</label>
-        <select
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
+        <Select
+          label="Intervalo"
+          options={[
+            { value: 'month', label: 'Mensual' },
+            { value: 'year', label: 'Anual' },
+          ]}
           disabled={intervalLocked}
           {...register('interval')}
-        >
-          <option value="month">Mensual</option>
-          <option value="year">Anual</option>
-        </select>
+        />
         {intervalLocked && (
-          <p className="mt-1 text-xs text-amber-600">
+          <Text variant="muted" tone="warning" className="mt-1">
             El intervalo no puede modificarse mientras el plan tenga suscripciones activas.
-          </p>
+          </Text>
         )}
       </div>
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700">Características</label>
+        <Text variant="label" as="span">Características</Text>
         {fields.map((field, i) => (
           <div key={field.id} className="flex gap-2">
             <Input {...register(`features.${i}.value`)} className="flex-1" />
             {fields.length > 1 && (
-              <Button type="button" variant="danger" size="sm" onClick={() => remove(i)}>✕</Button>
+              <Button type="button" variant="danger" size="sm" onClick={() => remove(i)} aria-label="Quitar característica">
+                <X className="h-4 w-4" aria-hidden="true" />
+              </Button>
             )}
           </div>
         ))}
         <Button type="button" variant="ghost" size="sm" onClick={() => append({ value: '' })}>
-          + Agregar característica
+          <Plus className="h-4 w-4" aria-hidden="true" /> Agregar característica
         </Button>
       </div>
       <Button type="submit" isLoading={isSubmitting} className="w-full">{submitLabel}</Button>

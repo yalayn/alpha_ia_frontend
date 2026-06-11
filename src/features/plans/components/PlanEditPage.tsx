@@ -1,5 +1,6 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Card, CardBody, CardHeader, Spinner, ErrorMessage } from '@/shared';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import { Card, CardBody, CardHeader, Spinner, ErrorMessage, Button, Heading, Text } from '@/shared';
 import { usePlanDetail, usePlanEdit } from '../hooks/use-plans';
 import { PlanForm } from './PlanForm';
 import type { PlanFormValues } from '../types/plans.types';
@@ -29,16 +30,18 @@ export function PlanEditPage() {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-8">
-      <Link
-        to={`/plans/${planId}`}
-        className="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800 mb-6"
+      <Button
+        variant="ghost"
+        size="sm"
+        className="mb-6"
+        onClick={() => navigate(`/plans/${planId}`)}
       >
-        ← Volver al plan
-      </Link>
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Volver al plan
+      </Button>
       <Card>
         <CardHeader>
-          <h1 className="text-xl font-bold text-gray-900">Editar plan</h1>
-          <p className="text-sm text-gray-500 mt-1">{plan.name}</p>
+          <Heading size="xl">Editar plan</Heading>
+          <Text variant="secondary" className="mt-1">{plan.name}</Text>
         </CardHeader>
         <CardBody>
           {updateError && <ErrorMessage error={updateError} className="mb-4" />}

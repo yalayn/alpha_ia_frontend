@@ -1,4 +1,4 @@
-import { Badge } from '@/shared';
+import { Badge, Card, Text } from '@/shared';
 import type { ChangePlanResult } from '@/api/generated/model';
 import { formatChangeTypeLabel, formatEffectiveDateLabel, getChangeTypeBadgeVariant } from '../utils/plan-change.utils';
 
@@ -11,36 +11,36 @@ export function ChangePlanSummary({ result }: ChangePlanSummaryProps) {
   const isScheduled = changeType === 'scheduled';
 
   return (
-    <div className="space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
+    <Card className="space-y-3 p-4 shadow-none">
       <div className="flex items-center gap-2">
-        <span className="font-medium text-gray-700">Tipo de cambio:</span>
+        <Text as="span" variant="label">Tipo de cambio:</Text>
         <Badge variant={getChangeTypeBadgeVariant(changeType)}>
           {formatChangeTypeLabel(changeType)}
         </Badge>
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="font-medium text-gray-700">Plan activo:</span>
-        <span className="text-gray-600">{planId}</span>
+        <Text as="span" variant="label">Plan activo:</Text>
+        <Text as="span" variant="secondary">{planId}</Text>
       </div>
 
       {isScheduled && scheduledPlanId && (
         <div className="flex items-center gap-2">
-          <span className="font-medium text-gray-700">Plan programado:</span>
-          <span className="text-gray-600">{scheduledPlanId}</span>
+          <Text as="span" variant="label">Plan programado:</Text>
+          <Text as="span" variant="secondary">{scheduledPlanId}</Text>
         </div>
       )}
 
       <div className="flex items-center gap-2">
-        <span className="font-medium text-gray-700">Efectivo:</span>
-        <span className="text-gray-600">{formatEffectiveDateLabel(changeType, effectiveDate)}</span>
+        <Text as="span" variant="label">Efectivo:</Text>
+        <Text as="span" variant="secondary">{formatEffectiveDateLabel(changeType, effectiveDate)}</Text>
       </div>
 
       {isScheduled && (
-        <p className="text-xs text-amber-600">
+        <Text variant="muted" tone="warning">
           El plan actual continúa activo hasta la fecha de efecto. Sin cobro inmediato.
-        </p>
+        </Text>
       )}
-    </div>
+    </Card>
   );
 }

@@ -7,9 +7,10 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   errorMessage?: string;
 }
 
+// DESIGN_SYSTEM.md §8.3
 const inputVariantStyles = {
-  default: 'border-gray-300 focus:border-blue-500 focus:ring-blue-500',
-  error: 'border-red-500 focus:border-red-500 focus:ring-red-500',
+  default: 'border-border focus:border-border-focus focus:ring-[3px] focus:ring-brand-50',
+  error: 'border-error-500 focus:border-error-500 focus:ring-[3px] focus:ring-error-100',
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -20,9 +21,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-');
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-2">
       {label && (
-        <label htmlFor={inputId} className="text-sm font-medium text-gray-700">
+        <label htmlFor={inputId} className="text-md font-medium text-foreground">
           {label}
         </label>
       )}
@@ -30,19 +31,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         ref={ref}
         id={inputId}
         className={cn(
-          'block w-full rounded-md border px-3 py-2 text-sm shadow-sm',
-          'focus:outline-none focus:ring-1',
-          'disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed',
+          'block h-9 w-full rounded-md border bg-surface px-3 text-base text-foreground',
+          'placeholder:text-foreground-muted',
+          'focus:outline-none',
+          'disabled:bg-subtle disabled:text-foreground-muted disabled:cursor-not-allowed',
           inputVariantStyles[variant],
           className,
         )}
         {...props}
       />
       {errorMessage && (
-        <p className="text-xs text-red-600">{errorMessage}</p>
+        <p className="text-sm text-error-500">{errorMessage}</p>
       )}
       {helperText && !errorMessage && (
-        <p className="text-xs text-gray-500">{helperText}</p>
+        <p className="text-sm text-foreground-muted">{helperText}</p>
       )}
     </div>
   );

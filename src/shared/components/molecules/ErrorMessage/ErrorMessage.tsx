@@ -1,4 +1,5 @@
 import { cn } from '@/shared/utils/cn';
+import { Button } from '@/shared/components/atoms/Button';
 
 interface ApiError {
   response?: {
@@ -12,6 +13,8 @@ interface ApiError {
 
 export interface ErrorMessageProps {
   error: ApiError | Error | unknown;
+  /** DESIGN_SYSTEM.md §9.4 — error de carga de página: inline con botón "Reintentar" */
+  onRetry?: () => void;
   className?: string;
 }
 
@@ -25,16 +28,21 @@ function extractMessage(error: ApiError | Error | unknown): string {
   );
 }
 
-export function ErrorMessage({ error, className }: ErrorMessageProps) {
+export function ErrorMessage({ error, onRetry, className }: ErrorMessageProps) {
   return (
     <div
       role="alert"
       className={cn(
-        'rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700',
+        'flex items-center justify-between gap-4 rounded-md bg-error-100 px-4 py-3 text-sm text-error-500',
         className,
       )}
     >
-      {extractMessage(error)}
+      <span>{extractMessage(error)}</span>
+      {onRetry && (
+        <Button variant="secondary" size="sm" onClick={onRetry}>
+          Reintentar
+        </Button>
+      )}
     </div>
   );
 }

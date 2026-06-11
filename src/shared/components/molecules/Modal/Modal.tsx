@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { X } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import { Button } from '@/shared/components/atoms/Button';
 
@@ -6,11 +7,19 @@ export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
+  /** DESIGN_SYSTEM.md §8.6 — confirmación: 360px · default: 480px · formulario largo: 640px */
+  width?: 'sm' | 'md' | 'lg';
   className?: string;
   children: React.ReactNode;
 }
 
-export function Modal({ isOpen, onClose, title, className, children }: ModalProps) {
+const widthStyles: Record<Required<ModalProps>['width'], string> = {
+  sm: 'max-w-[360px]',
+  md: 'max-w-[480px]',
+  lg: 'max-w-[640px]',
+};
+
+export function Modal({ isOpen, onClose, title, width = 'md', className, children }: ModalProps) {
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -23,7 +32,7 @@ export function Modal({ isOpen, onClose, title, className, children }: ModalProp
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 bg-black/40"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -32,13 +41,14 @@ export function Modal({ isOpen, onClose, title, className, children }: ModalProp
         aria-modal="true"
         aria-labelledby={title ? 'modal-title' : undefined}
         className={cn(
-          'relative w-full max-w-lg rounded-lg bg-white shadow-xl',
+          'relative w-full rounded-xl bg-surface shadow-xl',
+          widthStyles[width],
           className,
         )}
       >
-        <div className="flex items-start justify-between border-b border-gray-200 px-6 py-4">
+        <div className="flex items-start justify-between border-b border-border px-6 py-4">
           {title && (
-            <h2 id="modal-title" className="text-base font-semibold text-gray-900">
+            <h2 id="modal-title" className="text-2xl font-bold text-foreground">
               {title}
             </h2>
           )}
@@ -49,7 +59,7 @@ export function Modal({ isOpen, onClose, title, className, children }: ModalProp
             aria-label="Cerrar"
             className="ml-auto -mr-2"
           >
-            ✕
+            <X className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
         <div className="px-6 py-4">{children}</div>

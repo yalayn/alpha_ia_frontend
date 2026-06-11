@@ -1,4 +1,4 @@
-import { Card, CardBody, Badge } from '@/shared';
+import { Card, CardBody, Badge, Text, ErrorMessage } from '@/shared';
 import { useListPlans } from '@/api/generated/admin/admin';
 import { reasonToMessage, getPlansWithFeature } from '../utils/access-control.utils';
 import type { AccessResult } from '@/api/generated/model';
@@ -15,22 +15,22 @@ export function AccessResultCard({ hasAccess, reason, customerId, featureId }: A
     <Card>
       <CardBody className="space-y-3">
         <div className="flex items-center gap-3">
-          <Badge variant={hasAccess ? 'success' : 'error'} size="md">
+          <Badge variant={hasAccess ? 'success' : 'error'}>
             {hasAccess ? 'Acceso permitido' : 'Acceso denegado'}
           </Badge>
         </div>
-        <div className="text-sm text-gray-600 space-y-1">
-          <p><span className="font-medium">Cliente:</span> {customerId}</p>
-          <p><span className="font-medium">Funcionalidad:</span> {featureId}</p>
+        <div className="space-y-1">
+          <Text variant="secondary"><Text as="span" variant="label">Cliente:</Text> {customerId}</Text>
+          <Text variant="secondary"><Text as="span" variant="label">Funcionalidad:</Text> {featureId}</Text>
         </div>
         {!hasAccess && reason && (
-          <div className="rounded-md bg-red-50 p-3 space-y-2">
-            <p className="text-sm text-red-700">{reasonToMessage(reason)}</p>
+          <div className="space-y-2">
+            <ErrorMessage error={new Error(reasonToMessage(reason))} />
             {reason === 'feature_not_in_plan' && upgradePlans.length > 0 && (
-              <p className="text-sm text-gray-600">
-                <span className="font-medium">Disponible en:</span>{' '}
+              <Text variant="secondary">
+                <Text as="span" variant="label">Disponible en:</Text>{' '}
                 {upgradePlans.map((p) => p.name).join(', ')}
-              </p>
+              </Text>
             )}
           </div>
         )}

@@ -1,17 +1,21 @@
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Card, CardBody, CardHeader, CardFooter, Button, Badge, ErrorMessage } from '@/shared';
+import { Package } from 'lucide-react';
+import {
+  Card, CardBody, CardHeader, CardFooter, Button, Badge, ErrorMessage,
+  Heading, Text, Skeleton, EmptyState, CheckList,
+} from '@/shared';
 import { useCancelSubscription, getGetCustomerSubscriptionQueryKey } from '@/api/generated/subscriptions/subscriptions';
 import { useAuth } from '@/core/auth/use-auth';
 import { useMySubscription } from '../hooks/use-my-subscription';
 import type { SubscriptionStatus } from '@/api/generated/model';
 
-function statusBadgeVariant(status: SubscriptionStatus): 'success' | 'warning' | 'error' | 'neutral' {
-  const map: Record<SubscriptionStatus, 'success' | 'warning' | 'error' | 'neutral'> = {
+function statusBadgeVariant(status: SubscriptionStatus): 'success' | 'warning' | 'error' | 'default' {
+  const map: Record<SubscriptionStatus, 'success' | 'warning' | 'error' | 'default'> = {
     active: 'success',
     inactive: 'warning',
     canceled: 'error',
-    expired: 'neutral',
+    expired: 'default',
   };
   return map[status];
 }
@@ -32,18 +36,20 @@ function formatDate(dateString: string): string {
 
 function SubscriptionCardSkeleton() {
   return (
-    <div className="animate-pulse space-y-4 rounded-lg border border-gray-200 bg-white p-6">
-      <div className="flex items-center justify-between">
-        <div className="h-5 w-1/3 rounded bg-gray-200" />
-        <div className="h-5 w-16 rounded-full bg-gray-200" />
-      </div>
-      <div className="space-y-2">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-4 rounded bg-gray-100" />
-        ))}
-      </div>
-      <div className="h-9 w-32 rounded bg-gray-200" />
-    </div>
+    <Card>
+      <CardBody className="space-y-4">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-5 w-1/3" />
+          <Skeleton className="h-5 w-16" />
+        </div>
+        <div className="space-y-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-4" />
+          ))}
+        </div>
+        <Skeleton className="h-9 w-32" />
+      </CardBody>
+    </Card>
   );
 }
 
@@ -75,17 +81,19 @@ export function MySubscriptionPage() {
 
   if (hasNoSubscription || !subscription) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-8 text-center">
+      <div className="mx-auto max-w-2xl px-4 py-8">
         <Card>
-          <CardBody className="py-12 flex flex-col items-center gap-4">
-            <div className="text-5xl">📦</div>
-            <h2 className="text-xl font-semibold text-gray-900">Sin suscripción activa</h2>
-            <p className="text-sm text-gray-500">
-              Aún no tienes un plan. Elige uno para comenzar.
-            </p>
-            <Button onClick={() => navigate('/subscription/new')}>
-              Elige tu plan
-            </Button>
+          <CardBody>
+            <EmptyState
+              icon={Package}
+              title="Aún no tienes un plan"
+              description="Elige uno para comenzar."
+              action={
+                <Button onClick={() => navigate('/subscription/new')}>
+                  Elige tu plan
+                </Button>
+              }
+            />
           </CardBody>
         </Card>
       </div>
@@ -105,43 +113,41 @@ export function MySubscriptionPage() {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold text-gray-900">Mi Suscripción</h1>
+            <Heading size="xl">Mi Suscripción</Heading>
             <Badge variant={statusBadgeVariant(subscription.status)}>
               {statusLabel(subscription.status)}
             </Badge>
           </div>
         </CardHeader>
 
-        <CardBody className="space-y-3 text-sm text-gray-700">
+        <CardBody className="space-y-3">
           {plan && (
-            <p>
-              <span className="font-medium">Plan:</span>{' '}
+            <Text variant="secondary">
+              <Text as="span" variant="label">Plan:</Text>{' '}
               {plan.name} — {plan.price} {plan.currency}/{plan.interval}
-            </p>
+            </Text>
           )}
-          <p><span className="font-medium">Inicio:</span> {formatDate(subscription.startDate)}</p>
+          <Text variant="secondary">
+            <Text as="span" variant="label">Inicio:</Text> {formatDate(subscription.startDate)}
+          </Text>
           {subscription.endDate && (
-            <p>
-              <span className="font-medium">
+            <Text variant="secondary">
+              <Text as="span" variant="label">
                 {isCanceled ? 'Acceso hasta:' : 'Renovación:'}
-              </span>{' '}
+              </Text>{' '}
               {formatDate(subscription.endDate)}
-            </p>
+            </Text>
           )}
 
           {plan && plan.features.length > 0 && (
             <div className="pt-2">
-              <p className="font-medium mb-1">Funcionalidades incluidas:</p>
-              <ul className="list-disc list-inside space-y-0.5 text-gray-600">
-                {plan.features.map((f) => (
-                  <li key={f}>{f}</li>
-                ))}
-              </ul>
+              <Text variant="label" className="mb-1">Funcionalidades incluidas:</Text>
+              <CheckList items={plan.features} />
             </div>
           )}
 
           {isExpired && (
-            <p className="text-amber-600 font-medium">Tu plan ha expirado.</p>
+            <Text variant="label" tone="warning">Tu plan ha expirado.</Text>
           )}
         </CardBody>
 
