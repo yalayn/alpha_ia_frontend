@@ -123,3 +123,21 @@ El proyecto sigue la **Pirámide de Testing**:
 - **Unit Tests** — lógica pura en `utils/` y hooks complejos (`npm run test`)
 - **Component Tests** — estados críticos de UI con RTL (`npm run test`)
 - **E2E Tests** — happy paths de usuario con Playwright (`npm run test:e2e`)
+
+---
+
+## Storybook — catálogo de componentes
+
+Storybook es el catálogo visual de los componentes de `shared/`. Permite ver, probar y documentar cada átomo y molécula en aislamiento — sin backend, sin login, sin navegar la app.
+
+```bash
+npm run storybook
+```
+
+Se abre en `http://localhost:6006`. Desde ahí puedes:
+
+- Navegar todas las variantes y estados de cada componente (Atoms / Molecules)
+- Modificar props en vivo desde el panel **Controls**
+- Ver la documentación autogenerada de props en la pestaña **Docs**
+
+**Regla del proyecto** ([`FRONTEND_ARCHITECTURE.md`](./FRONTEND_ARCHITECTURE.md) §6.1): todo componente de `shared/` debe tener su archivo `*.stories.tsx` con sus variantes y estados. Las stories son además la herramienta de verificación visual ante cualquier renovación del Design System.
