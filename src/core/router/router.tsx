@@ -112,10 +112,6 @@ export const router = createBrowserRouter([
         element: <SuspenseWrapper><SubscribePlanPage /></SuspenseWrapper>,
       },
       {
-        path: '/subscriptions/new',
-        element: <SuspenseWrapper><SubscribePlanPage /></SuspenseWrapper>,
-      },
-      {
         path: '/subscriptions/:subscriptionId',
         element: <SuspenseWrapper><SubscriptionDetailPage /></SuspenseWrapper>,
       },
