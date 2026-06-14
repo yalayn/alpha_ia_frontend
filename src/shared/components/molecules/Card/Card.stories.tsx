@@ -25,6 +25,18 @@ export const BodyOnly: Story = {
   ),
 };
 
+// flat: sin sombra — para cards anidadas (ej. resumen dentro de un modal)
+export const Flat: Story = {
+  args: { children: null },
+  render: () => (
+    <Card variant="flat" className="w-96 p-4">
+      <Text variant="secondary">
+        <Text as="span" variant="label">Plan:</Text> Pro — 10 USD/mes
+      </Text>
+    </Card>
+  ),
+};
+
 // DESIGN_SYSTEM.md §8.1 — anatomía completa: header + body + footer
 export const FullAnatomy: Story = {
   args: { children: null },

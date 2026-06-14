@@ -1,6 +1,8 @@
 import { cn } from '@/shared/utils/cn';
 
 export interface CardProps {
+  /** `flat`: sin sombra — para cards anidadas (resúmenes dentro de modales) */
+  variant?: 'default' | 'flat';
   className?: string;
   children: React.ReactNode;
 }
@@ -21,9 +23,15 @@ export interface CardFooterProps {
 }
 
 // DESIGN_SYSTEM.md §8.1
-export function Card({ className, children }: CardProps) {
+export function Card({ variant = 'default', className, children }: CardProps) {
   return (
-    <div className={cn('rounded-lg border border-border bg-surface shadow-sm', className)}>
+    <div
+      className={cn(
+        'rounded-lg border border-border bg-surface',
+        variant === 'default' && 'shadow-sm',
+        className,
+      )}
+    >
       {children}
     </div>
   );

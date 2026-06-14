@@ -64,6 +64,8 @@ return <div className="bg-white rounded-lg shadow p-6 border border-gray-200">..
 
 **Excepción permitida:** Clases de Tailwind estructurales y de layout son aceptables en features — `flex`, `grid`, `gap-*`, `space-*`, `p-*`/`m-*`, `w-full`, `max-w-*`, `overflow-hidden`, `col-span-*`. El layout interno de una página (disposición y espaciado entre bloques) es responsabilidad de la feature. Lo que no está permitido es cualquier clase que defina apariencia: **colores, tipografía, bordes, sombras o radios**.
 
+**Enforcement:** Esta regla se verifica automáticamente con `npm run lint:design` (`scripts/check-design-compliance.mjs`), que corre también en el hook `pre-push`. Una violación bloquea el push.
+
 ---
 
 ## 3. Estructura de Directorios

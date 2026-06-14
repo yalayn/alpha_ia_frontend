@@ -15,4 +15,7 @@ if [ "$current_branch" = "$protected_branch" ]; then
   exit 1
 fi
 
+# Regla 2.6 — sin clases de apariencia en features/ (FRONTEND_ARCHITECTURE.md)
+npm run lint:design --silent || exit 1
+
 exit 0

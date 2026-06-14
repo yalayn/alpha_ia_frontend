@@ -114,7 +114,7 @@ export function SubscribePlanPage() {
       <Modal isOpen={!!selectedPlan} onClose={handleClose} title="Confirmar suscripción">
         {selectedPlan && (
           <div className="space-y-4">
-            <Card className="space-y-1 p-4 shadow-none">
+            <Card variant="flat" className="space-y-1 p-4">
               <Text variant="secondary">
                 <Text as="span" variant="label">Plan:</Text> {selectedPlan.name}
               </Text>

@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "prepare": "git config core.hooksPath .githooks",
     "generate-api": "orval",
+    "lint:design": "node scripts/check-design-compliance.mjs",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",

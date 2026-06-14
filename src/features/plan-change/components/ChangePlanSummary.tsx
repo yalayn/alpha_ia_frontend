@@ -11,7 +11,7 @@ export function ChangePlanSummary({ result }: ChangePlanSummaryProps) {
   const isScheduled = changeType === 'scheduled';
 
   return (
-    <Card className="space-y-3 p-4 shadow-none">
+    <Card variant="flat" className="space-y-3 p-4">
       <div className="flex items-center gap-2">
         <Text as="span" variant="label">Tipo de cambio:</Text>
         <Badge variant={getChangeTypeBadgeVariant(changeType)}>

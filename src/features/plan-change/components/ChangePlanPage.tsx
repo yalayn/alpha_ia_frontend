@@ -114,7 +114,7 @@ export function ChangePlanPage() {
               </>
             ) : (
               <>
-                <Card className="space-y-1 p-4 shadow-none">
+                <Card variant="flat" className="space-y-1 p-4">
                   <Text variant="secondary">
                     <Text as="span" variant="label">Nuevo plan:</Text> {selectedPlan.name}
                   </Text>
